@@ -65,6 +65,7 @@ const functionGroups = [
     entries: [
       f("split", "niz", "niz.split(ločilo)", "Razdeli niz na dele.", "Seznam nizov.", "\"a;b;c\".split(\";\")", "['a', 'b', 'c']", "Ko razčlenjuješ besedilo ali vrstico iz datoteke."),
       f("startswith", "niz", "niz.startswith(začetek)", "Preveri, ali se niz začne z določenim besedilom.", "True ali False.", "\"mul(44,46)\".startswith(\"mul(\")", "True", "Ko moraš preveriti točen začetek niza, npr. pred nadaljnjim razčlenjevanjem ukaza."),
+      f("isdigit", "niz", "niz.isdigit()", "Preveri, ali niz vsebuje samo števke in ni prazen.", "True ali False.", "\"44\".isdigit()\n\"4*\".isdigit()", "True\nFalse", "Ko želiš pred pretvorbo z int(...) preveriti, ali je niz zapis nenegativnega celega števila.", "Presledek ali znak, kot je minus, povzroči False."),
       f("strip", "niz", "niz.strip()", "Odstrani presledke z začetka in konca.", "Nov očiščen niz.", "\"  abc  \".strip()", "'abc'", "Pri čiščenju vhodnega besedila.", "Ne odstranjuje presledkov iz sredine niza."),
       f("join", "niz · seznam nizov", "ločilo.join(seznam_nizov)", "Združi več nizov z izbranim ločilom.", "En nov niz.", "\"-\".join([\"a\", \"b\", \"c\"])", "'a-b-c'", "Ko iz seznama nizov sestavljaš en niz."),
       f("replace", "niz", "niz.replace(staro, novo)", "Zamenja pojavitve podniza.", "Nov niz.", "\"miza\".replace(\"a\", \"e\")", "'mize'", "Ko sistematično zamenjuješ dele besedila."),
@@ -116,7 +117,7 @@ const functionGroups = [
     description: "Metode objekta datoteke, navadno znotraj with open(...).",
     entries: [
       f("read", "datoteka", "datoteka.read()", "Prebere celotno vsebino datoteke.", "Niz str.", "with open(\"a.txt\", \"r\", encoding=\"utf-8\") as dat:\n    besedilo = dat.read()", "besedilo vsebuje celotno datoteko", "Ko potrebuješ celotno datoteko naenkrat."),
-      f("write", "datoteka", "datoteka.write(niz)", "Zapiše niz v datoteko.", "Število zapisanih znakov.", "with open(\"a.txt\", \"w\", encoding=\"utf-8\") as dat:\n    dat.write(\"Pozdrav\\n\")", "v datoteki je vrstica Pozdrav", "Ko zapisuješ besedilo v datoteko.", "write sam ne doda znaka za novo vrstico." )
+      f("write", "datoteka", "datoteka.write(niz)", "Zapiše niz v datoteko.", "Število zapisanih znakov.", "with open(\"a.txt\", \"w\", encoding=\"utf-8\") as dat:\n    dat.write(\"Pozdrav\\n\")", "v datoteki je vrstica Pozdrav", "Ko zapisuješ besedilo v datoteko.", "write sam ne doda znaka za novo vrstico.")
     ]
   },
   {
@@ -231,9 +232,7 @@ function renderFunctionEntry(entry) {
     .join("");
 
   return `
-    <details class="function-entry search-item" data-keywords="${esc(
-      `${entry.name} ${entry.target} ${entry.syntax} ${entry.meaning} ${entry.returns} ${entry.when}`
-    )}">
+    <details class="function-entry search-item" data-keywords="${esc(`${entry.name} ${entry.target} ${entry.syntax} ${entry.meaning} ${entry.returns} ${entry.when}`)}">
       <summary>
         <code>${esc(entry.name)}</code>
         <span class="use-tags">${targets}</span>
@@ -275,22 +274,9 @@ function installCompactStyles() {
     pre { font-size: 0.82rem; }
     .sidebar { padding-top: 22px; }
     .nav a { padding-top: 6px; padding-bottom: 6px; font-size: 0.87rem; }
-
-    .function-nav-sub {
-      display: grid;
-      gap: 1px;
-      margin: 2px 0 7px 13px;
-      padding-left: 9px;
-      border-left: 1px solid #35445f;
-    }
-    .function-nav-sub a {
-      padding: 4px 7px;
-      color: #aeb9cc;
-      font-size: 0.76rem;
-      font-weight: 500;
-    }
+    .function-nav-sub { display: grid; gap: 1px; margin: 2px 0 7px 13px; padding-left: 9px; border-left: 1px solid #35445f; }
+    .function-nav-sub a { padding: 4px 7px; color: #aeb9cc; font-size: 0.76rem; font-weight: 500; }
     .function-nav-sub a:hover { color: white; }
-
     .function-reference { grid-template-columns: 1fr; }
     .function-group { padding: 0; overflow: hidden; scroll-margin-top: 18px; }
     .function-group-heading { padding: 16px 18px 13px; }
@@ -299,44 +285,16 @@ function installCompactStyles() {
     .function-entry summary { padding: 10px 16px; }
     .function-entry summary code { min-width: 118px; }
     .function-body { padding: 6px 16px 16px; }
-
     .function-syntax-main { margin-bottom: 12px; }
     .function-syntax-main pre { margin: 4px 0 0; }
-    .function-facts {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0 0 13px;
-    }
-    .function-facts p {
-      margin: 0 !important;
-      padding: 9px 10px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: white;
-      color: var(--text);
-      font-size: 0.86rem;
-    }
-    .function-facts .function-return {
-      border-color: #badfd5;
-      background: #eef9f5;
-    }
-    .function-example-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
-      align-items: start;
-      gap: 10px;
-    }
+    .function-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 13px; }
+    .function-facts p { margin: 0 !important; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: white; color: var(--text); font-size: 0.86rem; }
+    .function-facts .function-return { border-color: #badfd5; background: #eef9f5; }
+    .function-example-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr); align-items: start; gap: 10px; }
     .function-example-grid > div { min-width: 0; }
-    .function-example-grid pre {
-      height: auto !important;
-      min-height: 72px;
-      margin: 4px 0 0 !important;
-    }
+    .function-example-grid pre { height: auto !important; min-height: 72px; margin: 4px 0 0 !important; }
     .result-box { background: #172235; }
     .function-note { margin-top: 10px; }
-    .function-legend { font-size: 0.87rem; }
-
     @media (max-width: 920px) {
       html { font-size: 14px; }
       .function-facts, .function-example-grid { grid-template-columns: 1fr; }
@@ -356,100 +314,64 @@ function buildFunctionReference() {
     const title = heading.querySelector("h2");
     const description = heading.querySelector("p");
     if (title) title.textContent = "Slovar funkcij";
-    if (description) {
-      description.textContent =
-        "Hiter slovar sintakse: kako funkcijo zapišeš, kaj naredi, kaj vrne in konkreten primer z rezultatom.";
-    }
+    if (description) description.textContent = "Hiter slovar sintakse: kako funkcijo zapišeš, kaj naredi, kaj vrne in konkreten primer z rezultatom.";
   }
 
   const oldGrid = section.querySelector(".grid");
   if (!oldGrid) return;
 
-  const intro = `
-    <div class="function-legend">
-      <strong>Kako uporabljaš slovar:</strong>
-      poišči ime funkcije ali klikni podpoglavje v levem kazalu. Pri vsaki funkciji najprej vidiš natančen zapis, nato kaj naredi in kaj vrne, spodaj pa primer ter rezultat.
-      Pri matematiki: <code>math.sin(x)</code> je za eno število, <code>np.sin(tabela)</code> pa za NumPy podatke.
-    </div>`;
+  const groups = functionGroups.map((group) => `
+    <article id="${esc(group.id)}" class="card wide function-group">
+      <div class="function-group-heading">
+        <h3>${esc(group.title)}</h3>
+        <p>${esc(group.description)}</p>
+      </div>
+      <div class="function-list">${group.entries.map(renderFunctionEntry).join("")}</div>
+    </article>`).join("");
 
-  const groups = functionGroups
-    .map(
-      (group) => `
-        <article id="${esc(group.id)}" class="card wide function-group">
-          <div class="function-group-heading">
-            <h3>${esc(group.title)}</h3>
-            <p>${esc(group.description)}</p>
-          </div>
-          <div class="function-list">
-            ${group.entries.map(renderFunctionEntry).join("")}
-          </div>
-        </article>`
-    )
-    .join("");
-
-  oldGrid.outerHTML = `${intro}<div class="grid function-reference">${groups}</div>`;
+  oldGrid.outerHTML = `<div class="grid function-reference">${groups}</div>`;
 }
 
 function buildFunctionNavigation() {
   const mainLink = document.querySelector('a[href="#funkcije"]');
   if (!mainLink) return;
-
   mainLink.textContent = "Slovar funkcij";
   document.querySelector(".function-nav-sub")?.remove();
-
   const subnav = document.createElement("div");
   subnav.className = "function-nav-sub";
-  subnav.innerHTML = functionGroups
-    .map((group) => `<a href="#${esc(group.id)}">${esc(group.nav)}</a>`)
-    .join("");
+  subnav.innerHTML = functionGroups.map((group) => `<a href="#${esc(group.id)}">${esc(group.nav)}</a>`).join("");
   mainLink.insertAdjacentElement("afterend", subnav);
 }
 
 function cleanGeneralPageLabels() {
   document.title = "Python priročnik";
-
   const brand = document.querySelector(".brand");
   if (brand) brand.textContent = "Python priročnik";
-
   document.querySelector(".brand-subtitle")?.remove();
   document.querySelector(".notice")?.remove();
-
-  const notebookLink = document.querySelector('a[href*="snov.ipynb"]');
-  notebookLink?.remove();
+  document.querySelector('a[href*="snov.ipynb"]')?.remove();
 
   const patternsNav = document.querySelector('a[href="#vzorci"]');
   if (patternsNav) patternsNav.textContent = "Programerski vzorci";
-
   const patternsHeading = document.querySelector("#vzorci .section-heading h2");
   if (patternsHeading) patternsHeading.textContent = "Programerski vzorci";
-
   const patternsDescription = document.querySelector("#vzorci .section-heading p");
-  if (patternsDescription) {
-    patternsDescription.textContent =
-      "Prevod pogoste ideje v standardni in pregleden programski zapis.";
-  }
+  if (patternsDescription) patternsDescription.textContent = "Prevod pogoste ideje v standardni in pregleden programski zapis.";
 
   const dictionarySection = document.querySelector("#slovarji");
   if (dictionarySection) {
     dictionarySection.querySelectorAll("pre code").forEach((code) => {
-      code.textContent = code.textContent.replace(
-        "# zelo pogost izpitni vzorec:",
-        "# zelo pogost vzorec:"
-      );
+      code.textContent = code.textContent.replace("# zelo pogost izpitni vzorec:", "# zelo pogost vzorec:");
     });
   }
 
   const classesDescription = document.querySelector("#razredi .section-heading p");
-  if (classesDescription) {
-    classesDescription.textContent = "Osnovni zapis razreda in posebnih metod.";
-  }
+  if (classesDescription) classesDescription.textContent = "Osnovni zapis razreda in posebnih metod.";
 
   const hero = document.querySelector(".hero");
   if (hero) {
     [...hero.childNodes].forEach((node) => {
-      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === "#") {
-        node.remove();
-      }
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === "#") node.remove();
     });
   }
 }
@@ -464,10 +386,7 @@ const sections = [...document.querySelectorAll(".section")];
 const noResults = document.querySelector("#no-results");
 
 function normalize(value) {
-  return value
-    .toLocaleLowerCase("sl")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return value.toLocaleLowerCase("sl").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 function updateSearch() {
@@ -503,7 +422,6 @@ document.addEventListener("keydown", (event) => {
     searchInput.focus();
     searchInput.select();
   }
-
   if (event.key === "Escape" && document.activeElement === searchInput) {
     searchInput.value = "";
     updateSearch();
