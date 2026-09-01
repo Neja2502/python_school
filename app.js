@@ -64,6 +64,7 @@ const functionGroups = [
     description: "Metode se kličejo na nizu. Nizi so nespremenljivi, zato praviloma vrnejo nov niz ali drugo vrednost.",
     entries: [
       f("split", "niz", "niz.split(ločilo)", "Razdeli niz na dele.", "Seznam nizov.", "\"a;b;c\".split(\";\")", "['a', 'b', 'c']", "Ko razčlenjuješ besedilo ali vrstico iz datoteke."),
+      f("startswith", "niz", "niz.startswith(začetek)", "Preveri, ali se niz začne z določenim besedilom.", "True ali False.", "\"mul(44,46)\".startswith(\"mul(\")", "True", "Ko moraš preveriti točen začetek niza, npr. pred nadaljnjim razčlenjevanjem ukaza."),
       f("strip", "niz", "niz.strip()", "Odstrani presledke z začetka in konca.", "Nov očiščen niz.", "\"  abc  \".strip()", "'abc'", "Pri čiščenju vhodnega besedila.", "Ne odstranjuje presledkov iz sredine niza."),
       f("join", "niz · seznam nizov", "ločilo.join(seznam_nizov)", "Združi več nizov z izbranim ločilom.", "En nov niz.", "\"-\".join([\"a\", \"b\", \"c\"])", "'a-b-c'", "Ko iz seznama nizov sestavljaš en niz."),
       f("replace", "niz", "niz.replace(staro, novo)", "Zamenja pojavitve podniza.", "Nov niz.", "\"miza\".replace(\"a\", \"e\")", "'mize'", "Ko sistematično zamenjuješ dele besedila."),
