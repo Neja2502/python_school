@@ -44,3 +44,48 @@ document.addEventListener("keydown", (event) => {
     searchInput.blur();
   }
 });
+
+// Splošen videz priročnika brez izpitnih oznak.
+document.title = "Python priročnik";
+
+const brand = document.querySelector(".brand");
+if (brand) brand.textContent = "Python priročnik";
+
+document.querySelector(".brand-subtitle")?.remove();
+document.querySelector(".notice")?.remove();
+
+const patternsNav = document.querySelector('a[href="#vzorci"]');
+if (patternsNav) patternsNav.textContent = "Programerski vzorci";
+
+const patternsHeading = document.querySelector("#vzorci .section-heading h2");
+if (patternsHeading) patternsHeading.textContent = "Programerski vzorci";
+
+const patternsDescription = document.querySelector("#vzorci .section-heading p");
+if (patternsDescription) {
+  patternsDescription.textContent =
+    "Prevod pogoste ideje v standardni in pregleden programski zapis.";
+}
+
+const dictionarySection = document.querySelector("#slovarji");
+if (dictionarySection) {
+  dictionarySection.querySelectorAll("pre code").forEach((code) => {
+    code.textContent = code.textContent.replace(
+      "# zelo pogost izpitni vzorec:",
+      "# zelo pogost vzorec:"
+    );
+  });
+}
+
+const classesDescription = document.querySelector("#razredi .section-heading p");
+if (classesDescription) {
+  classesDescription.textContent = "Osnovni zapis razreda in posebnih metod.";
+}
+
+const hero = document.querySelector(".hero");
+if (hero) {
+  [...hero.childNodes].forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === "#") {
+      node.remove();
+    }
+  });
+}
