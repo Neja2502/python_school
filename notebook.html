@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zvezek — Python priročnik</title>
+  <link rel="stylesheet" href="notebook.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="notebook.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html">← Python priročnik</a>
+    <div class="notebook-name" id="notebook-name">Zvezek</div>
+    <div class="top-actions">
+      <button id="toggle-code" type="button">Skrij kodo</button>
+      <button id="scroll-top" type="button">Na vrh</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="toc-panel">
+      <div class="toc-title">KAZALO</div>
+      <input id="toc-search" type="search" placeholder="Išči poglavje ..." autocomplete="off" />
+      <nav id="toc" aria-label="Kazalo zvezka"></nav>
+      <div class="toc-footer">
+        Kazalo se samodejno ustvari iz naslovov <code>#</code>, <code>##</code> in <code>###</code> v Markdown celicah.
+      </div>
+    </aside>
+
+    <main class="notebook-shell">
+      <div id="loading" class="status-card">Nalagam zvezek ...</div>
+      <div id="error" class="status-card error" hidden></div>
+      <article id="notebook" class="notebook" hidden></article>
+    </main>
+  </div>
+</body>
+</html>
