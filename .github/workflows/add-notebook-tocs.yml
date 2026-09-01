@@ -1,0 +1,34 @@
+name: Add notebook TOCs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-notebook-tocs.yml'
+      - 'scripts/add_notebook_toc.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  add-tocs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add clickable notebook tables of contents
+        run: python scripts/add_notebook_toc.py
+
+      - name: Commit updated notebooks
+        run: |
+          if git diff --quiet -- snov.ipynb izpitiRP.ipynb; then
+            echo "No notebook changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add snov.ipynb izpitiRP.ipynb
+          git commit -m "Add clickable notebook tables of contents"
+          git push
