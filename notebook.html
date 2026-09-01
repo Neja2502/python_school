@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Pregleden prikaz Jupyter zvezkov z iskanjem in kazalom." />
   <title>Zvezek — Python priročnik</title>
   <link rel="stylesheet" href="notebook.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css" />
@@ -19,21 +20,41 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="home-link" href="index.html">← Python priročnik</a>
-    <div class="notebook-name" id="notebook-name">Zvezek</div>
+    <div class="top-left">
+      <a class="home-link" href="index.html">Python priročnik</a>
+      <span class="crumb">/</span>
+      <a class="books-link" href="zvezki.html">Zvezki</a>
+    </div>
+
+    <nav class="notebook-tabs" id="notebook-tabs" aria-label="Izbira zvezka"></nav>
+
     <div class="top-actions">
       <button id="toggle-code" type="button">Skrij kodo</button>
-      <button id="scroll-top" type="button">Na vrh</button>
+      <button id="scroll-top" type="button">↑ Na vrh</button>
     </div>
   </header>
 
   <div class="workspace">
     <aside class="toc-panel">
-      <div class="toc-title">KAZALO</div>
-      <input id="toc-search" type="search" placeholder="Išči poglavje ..." autocomplete="off" />
+      <div class="notebook-label">ZVEZEK</div>
+      <h1 class="sidebar-title" id="notebook-name">Zvezek</h1>
+      <p class="sidebar-description" id="notebook-description"></p>
+
+      <label class="search-label" for="notebook-search">Išči po zvezku</label>
+      <div class="search-box">
+        <input id="notebook-search" type="search" placeholder="npr. split, NumPy, slovar ..." autocomplete="off" />
+        <kbd>Ctrl K</kbd>
+      </div>
+      <div id="search-status" class="search-status">Prikazane so vse celice.</div>
+
+      <div class="toc-heading-row">
+        <div class="toc-title">KAZALO</div>
+        <span id="toc-count"></span>
+      </div>
       <nav id="toc" aria-label="Kazalo zvezka"></nav>
+
       <div class="toc-footer">
-        Kazalo se samodejno ustvari iz naslovov <code>#</code>, <code>##</code> in <code>###</code> v Markdown celicah.
+        Kazalo se ustvari iz Markdown naslovov. Klik na naslov skoči neposredno na poglavje.
       </div>
     </aside>
 
