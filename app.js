@@ -13,43 +13,60 @@ function f(name, target, meaning, syntax, example, when, note = "") {
 const functionGroups = [
   {
     title: "Python — splošne funkcije",
-    description: "Funkcije, ki niso vezane samo na en tip podatkov.",
+    description: "Vgrajene funkcije, ki jih uporabljaš pri različnih tipih podatkov.",
     entries: [
       f("abs", "število", "Vrne absolutno vrednost števila.", "abs(x)", "abs(-7)  # 7", "Ko potrebuješ velikost vrednosti brez predznaka.", "Za NumPy tabele uporabi np.abs(...)."),
-      f("all", "seznam · iterable", "Vrne True, če so vsi elementi oziroma pogoji resnični.", "all(iterable)", "all(x > 0 for x in [2, 5, 1])  # True", "Ko mora pogoj veljati za vse elemente.", "Za NumPy tabele uporabi np.all(...)."),
+      f("all", "seznam · iterable", "Vrne True samo, če so vsi elementi oziroma vsi preverjeni pogoji resnični.", "all(iterable)", "all(x > 0 for x in [2, 5, 1])  # True", "Ko mora pogoj veljati za vse elemente.", "Za NumPy tabele uporabi np.all(...)."),
       f("any", "seznam · iterable", "Vrne True, če je vsaj en element oziroma pogoj resničen.", "any(iterable)", "any(x < 0 for x in [2, -5, 1])  # True", "Ko zadostuje, da pogoj velja za vsaj en element.", "Za NumPy tabele uporabi np.any(...)."),
-      f("enumerate", "niz · seznam · iterable", "Med iteriranjem hkrati vrača indeks in element.", "enumerate(iterable, start=0)", "for i, x in enumerate([10, 20]):\n    print(i, x)", "Ko potrebuješ tako indeks kot element."),
-      f("int", "število · niz", "Pretvori vrednost v celo število.", "int(x)", "int(\"42\")  # 42", "Ko bereš številke iz nizov ali želiš celoštevilsko vrednost."),
-      f("len", "niz · seznam · slovar · tuple", "Vrne število elementov.", "len(objekt)", "len([4, 7, 9])  # 3", "Ko potrebuješ dolžino zaporedja ali število ključev slovarja.", "Pri 2D NumPy tabeli len(tab) vrne velikost prve osi, ne vseh elementov."),
-      f("list", "iterable", "Ustvari seznam iz drugega iterable objekta.", "list(iterable)", "list(\"abc\")  # ['a', 'b', 'c']", "Ko želiš rezultat pretvoriti v spremenljiv seznam."),
-      f("max", "seznam · tuple · iterable", "Vrne največji element.", "max(iterable)", "max([4, 9, 2])  # 9", "Ko potrebuješ največjo vrednost v običajnem Python zaporedju.", "Za NumPy uporabi np.max(...)."),
-      f("min", "seznam · tuple · iterable", "Vrne najmanjši element.", "min(iterable)", "min([4, 9, 2])  # 2", "Ko potrebuješ najmanjšo vrednost v običajnem Python zaporedju.", "Za NumPy uporabi np.min(...)."),
+      f("enumerate", "niz · seznam · iterable", "Med iteriranjem hkrati vrača indeks in element.", "enumerate(iterable, start=0)", "for i, x in enumerate([10, 20]):\n    print(i, x)", "Ko v zanki potrebuješ tako indeks kot element."),
+      f("int", "število · niz", "Pretvori vrednost v celo število.", "int(x)", "int(\"42\")  # 42", "Ko bereš cela števila iz nizov ali želiš celoštevilsko vrednost."),
+      f("len", "niz · seznam · slovar · tuple · NumPy", "Vrne dolžino oziroma število elementov prve ravni.", "len(objekt)", "len([4, 7, 9])  # 3", "Ko potrebuješ dolžino zaporedja ali število ključev slovarja.", "Pri 2D NumPy tabeli len(tab) vrne število vrstic, ne skupnega števila elementov."),
+      f("list", "iterable", "Iz iterable objekta ustvari seznam.", "list(iterable)", "list(\"abc\")  # ['a', 'b', 'c']", "Ko želiš podatke pretvoriti v spremenljiv seznam."),
+      f("max", "seznam · tuple · iterable", "Vrne največji element.", "max(iterable)", "max([4, 9, 2])  # 9", "Ko potrebuješ največjo vrednost v običajnem Python zaporedju.", "Za NumPy tabelo uporabi np.max(...)."),
+      f("min", "seznam · tuple · iterable", "Vrne najmanjši element.", "min(iterable)", "min([4, 9, 2])  # 2", "Ko potrebuješ najmanjšo vrednost v običajnem Python zaporedju.", "Za NumPy tabelo uporabi np.min(...)."),
       f("open", "datoteka", "Odpre datoteko za branje, pisanje ali dodajanje.", "open(pot, način, encoding=\"utf-8\")", "with open(\"podatki.txt\", \"r\", encoding=\"utf-8\") as dat:\n    vsebina = dat.read()", "Ko bereš ali zapisuješ tekstovne datoteke.", "Najvarneje je uporabljati with open(...), ker se datoteka samodejno zapre."),
-      f("print", "karkoli", "Izpiše vrednosti v konzolo.", "print(vrednost1, vrednost2, ...)", "print(\"rezultat:\", 5)", "Za preverjanje in prikaz rezultata.", "print ne vrača rezultata funkcije; za to uporabi return."),
-      f("range", "zanka", "Ustvari zaporedje celih števil za iteriranje.", "range(konec)\nrange(začetek, konec, korak)", "for i in range(0, 6, 2):\n    print(i)  # 0, 2, 4", "Najpogosteje v for zanki, kadar potrebuješ indekse ali določeno zaporedje števil.", "Konec ni vključen."),
-      f("round", "število", "Zaokroži število na dano število decimalnih mest.", "round(x, ndigits)", "round(3.14159, 2)  # 3.14", "Ko želiš zaokrožen prikaz ali končni numerični rezultat."),
+      f("print", "karkoli", "Izpiše vrednosti v konzolo ali v datoteko.", "print(vrednost1, vrednost2, ..., file=None)", "print(\"rezultat:\", 5)\nprint(\"vrstica\", file=dat)", "Za prikaz ali zapis izpisa.", "print ne vrača rezultata funkcije; za to uporabi return."),
+      f("range", "zanka", "Ustvari zaporedje celih števil, najpogosteje za for zanko.", "range(konec)\nrange(začetek, konec)\nrange(začetek, konec, korak)", "for i in range(0, 6, 2):\n    print(i)  # 0, 2, 4", "Ko potrebuješ indekse ali določeno zaporedje celih števil.", "Konec ni vključen."),
+      f("round", "število", "Zaokroži število na izbrano število decimalnih mest.", "round(x, ndigits)", "round(3.14159, 2)  # 3.14", "Ko želiš zaokrožen rezultat."),
       f("set", "iterable", "Ustvari množico unikatnih elementov.", "set(iterable)", "set([1, 1, 2, 3])  # {1, 2, 3}", "Ko želiš odstraniti ponovitve ali hitro preverjati pripadnost."),
+      f("slice", "niz · seznam · NumPy", "Ustvari objekt rezine, ki opisuje začetek, konec in korak.", "slice(začetek, konec, korak)", "rezina = slice(0, 8, 2)\na[rezina]", "Ko moraš rezino sestaviti programsko, npr. pri večdimenzionalnih NumPy tabelah.", "Običajno je krajši zapis a[začetek:konec:korak]."),
       f("sorted", "niz · seznam · iterable", "Vrne nov urejen seznam; originala ne spremeni.", "sorted(iterable, key=None, reverse=False)", "sorted([3, 1, 2])  # [1, 2, 3]", "Ko želiš urejeno kopijo podatkov.", "Za spremembo obstoječega seznama uporabi seznam.sort()."),
-      f("str", "karkoli", "Pretvori vrednost v niz.", "str(x)", "str(42)  # '42'", "Ko sestavljaš besedilo ali želiš tekstovno predstavitev vrednosti."),
-      f("sum", "seznam · tuple · iterable", "Sešteje elemente.", "sum(iterable)", "sum([2, 4, 6])  # 12", "Ko seštevaš običajno Python zaporedje števil.", "Za NumPy tabele je primernejši np.sum(...)."),
+      f("str", "karkoli", "Pretvori vrednost v niz.", "str(x)", "str(42)  # '42'", "Ko sestavljaš besedilo ali pripravljaš vrednost za zapis v datoteko."),
+      f("sum", "seznam · tuple · iterable", "Sešteje elemente.", "sum(iterable)", "sum([2, 4, 6])  # 12", "Ko seštevaš običajno Python zaporedje števil.", "Za NumPy tabele uporabi np.sum(...)."),
       f("tuple", "iterable", "Ustvari nabor (tuple), nespremenljivo zaporedje.", "tuple(iterable)", "tuple([1, 2])  # (1, 2)", "Za pare, več vrnjenih vrednosti ali podatke, ki jih ne želiš spreminjati."),
       f("type", "karkoli", "Vrne tip objekta.", "type(objekt)", "type([1, 2])  # <class 'list'>", "Ko preverjaš, kakšen tip vrednosti imaš."),
-      f("zip", "niz · seznam · iterable", "Poveže elemente več iterable objektov po istem indeksu.", "zip(a, b, ...)", "for ime, tocke in zip(imena, rezultati):\n    print(ime, tocke)", "Ko imaš vzporedne sezname in želiš hoditi po njih hkrati.", "Ustavi se pri najkrajšem iterable objektu.")
+      f("zip", "niz · seznam · iterable", "Poveže elemente več iterable objektov po istem položaju.", "zip(a, b, ...)", "for ime, tocke in zip(imena, rezultati):\n    print(ime, tocke)", "Ko imaš vzporedne sezname in želiš hoditi po njih hkrati.", "Ustavi se pri najkrajšem iterable objektu.")
+    ]
+  },
+  {
+    title: "Python — matematične funkcije (math)",
+    description: "Za računanje z enim številom. Najprej napiši import math. Za cele NumPy tabele uporabi ustrezno np. funkcijo.",
+    entries: [
+      f("math.sqrt", "število · math", "Izračuna kvadratni koren enega števila.", "import math\nmath.sqrt(x)", "math.sqrt(25)  # 5.0", "Ko računaš koren skalarne vrednosti.", "Za NumPy tabelo uporabi np.sqrt(tab)."),
+      f("math.sin", "število · math", "Izračuna sinus kota v radianih.", "import math\nmath.sin(kot)", "math.sin(math.pi / 2)  # 1.0", "Ko računaš sinus enega kota.", "Kot mora biti v radianih. Za NumPy tabelo uporabi np.sin(...)."),
+      f("math.cos", "število · math", "Izračuna kosinus kota v radianih.", "import math\nmath.cos(kot)", "math.cos(0)  # 1.0", "Ko računaš kosinus enega kota.", "Za NumPy tabelo uporabi np.cos(...)."),
+      f("math.asin", "število · math", "Inverzni sinus: iz vrednosti sinusa vrne kot v radianih.", "import math\nmath.asin(x)", "math.asin(0.5)  # približno 0.524", "Ko iz sinusa iščeš en sam kot.", "V modulu math je ime asin, v NumPy pa se pogosto piše np.arcsin(...)."),
+      f("math.radians", "število · math", "Pretvori stopinje v radiane.", "math.radians(stopinje)", "math.radians(180)  # približno 3.14159", "Pred sin/cos, če je kot podan v stopinjah."),
+      f("math.degrees", "število · math", "Pretvori radiane v stopinje.", "math.degrees(radiani)", "math.degrees(math.pi / 2)  # 90.0", "Ko želiš kot iz radianov pretvoriti nazaj v stopinje."),
+      f("math.pi", "število · math", "Konstanta π.", "math.pi", "kot = math.pi / 4", "Ko potrebuješ π v skalarnem izračunu.", "To ni funkcija, zato nima oklepajev."),
+      f("math.exp", "število · math", "Izračuna e na potenco x.", "math.exp(x)", "math.exp(1)  # e", "Za eksponentno funkcijo enega števila.", "Za NumPy tabelo uporabi np.exp(...)."),
+      f("math.log", "število · math", "Izračuna naravni logaritem.", "math.log(x)", "math.log(math.exp(1))  # 1.0", "Za naravni logaritem pozitivnega števila.", "Za NumPy tabelo uporabi np.log(...).")
     ]
   },
   {
     title: "Nizi — metode",
     description: "Metode se kličejo na nizu. Nizi so nespremenljivi, zato metode praviloma vrnejo nov niz.",
     entries: [
-      f("split", "niz", "Razdeli niz na seznam delov.", "niz.split(ločiło)\nniz.split()", "\"a;b;c\".split(\";\")  # ['a', 'b', 'c']", "Ko razčlenjuješ besedilo, CSV-podobne zapise ali besede.", "Brez argumenta razdeli po poljubnih presledkih."),
+      f("split", "niz", "Razdeli niz na seznam delov.", "niz.split(ločilo)\nniz.split()", "\"a;b;c\".split(\";\")  # ['a', 'b', 'c']", "Ko razčlenjuješ besedilo, zapise iz datoteke ali besede.", "Brez argumenta razdeli po poljubnih presledkih."),
       f("strip", "niz", "Odstrani presledke ali podane znake z začetka in konca niza.", "niz.strip()\nniz.strip(znaki)", "\"  abc  \".strip()  # 'abc'", "Pri čiščenju vrstic iz datoteke in delov po split(...).", "Ne odstranjuje znakov iz sredine niza."),
-      f("join", "niz · seznam nizov", "Združi več nizov z izbranim ločilom.", "ločilo.join(seznam_nizov)", "\"-\".join([\"a\", \"b\", \"c\"])  # 'a-b-c'", "Ko iz seznama nizov sestavljaš en niz.", "Metodo kličeš na ločilu; elementi morajo biti nizi."),
+      f("join", "niz · seznam nizov", "Združi več nizov z izbranim ločilom.", "ločilo.join(seznam_nizov)", "\"-\".join([\"a\", \"b\", \"c\"])  # 'a-b-c'", "Ko iz seznama nizov sestavljaš en niz.", "Metodo kličeš na ločilu; vsi elementi morajo biti nizi."),
       f("replace", "niz", "Vrne nov niz z zamenjanimi pojavitvami.", "niz.replace(staro, novo)", "\"miza\".replace(\"a\", \"e\")  # 'mize'", "Ko sistematično zamenjuješ dele besedila."),
-      f("lower", "niz", "Vrne niz z malimi črkami.", "niz.lower()", "\"Python\".lower()  # 'python'", "Za primerjave besedila brez razlikovanja velikih/malih črk."),
+      f("lower", "niz", "Vrne niz z malimi črkami.", "niz.lower()", "\"Python\".lower()  # 'python'", "Za primerjave besedila brez razlikovanja velikih in malih črk."),
       f("upper", "niz", "Vrne niz z velikimi črkami.", "niz.upper()", "\"Python\".upper()  # 'PYTHON'", "Ko želiš poenotiti ali oblikovati besedilo."),
       f("count", "niz · seznam", "Prešteje, kolikokrat se element ali podniz pojavi.", "niz.count(x)\nseznam.count(x)", "\"banana\".count(\"a\")  # 3", "Ko želiš število pojavitev brez ročnega števca."),
       f("find", "niz", "Vrne indeks prve pojavitve podniza; če ga ni, vrne -1.", "niz.find(podniz)", "\"program\".find(\"gram\")  # 3", "Ko iščeš položaj podniza in odsotnost ne sme povzročiti napake.", "Za strožjo različico uporabi index(...)."),
-      f("index", "niz · seznam", "Vrne indeks prve pojavitve; če elementa ni, sproži napako ValueError.", "niz.index(x)\nseznam.index(x)", "[4, 7, 9].index(7)  # 1", "Ko veš, da element obstaja in potrebuješ njegov položaj.")
+      f("index", "niz · seznam", "Vrne indeks prve pojavitve; če elementa ni, sproži ValueError.", "niz.index(x)\nseznam.index(x)", "[4, 7, 9].index(7)  # 1", "Ko veš, da element obstaja in potrebuješ njegov položaj."),
+      f("format", "niz", "Vstavi vrednosti v označena mesta v nizu.", "\"{0}, {1}\".format(a, b)", "\"{0},{1}\".format(\"Miha\", 8)  # 'Miha,8'", "Ko sestavljaš oblikovan niz, npr. za zapis v datoteko.", "V novejši kodi so pogosto preglednejši f-nizi: f\"{a},{b}\".")
     ]
   },
   {
@@ -72,9 +89,9 @@ const functionGroups = [
     title: "Slovarji in množice",
     description: "Metode za delo s pari ključ–vrednost ter unikatnimi elementi.",
     entries: [
-      f("get", "slovar", "Vrne vrednost za ključ; če ključa ni, lahko vrne privzeto vrednost.", "slovar.get(ključ, privzeto)", "stevci[x] = stevci.get(x, 0) + 1", "Za varno branje ključa in posebej za števce/akumulacijo.", "Za razliko od slovar[ključ] odsoten ključ ne povzroči KeyError."),
+      f("get", "slovar", "Vrne vrednost za ključ; če ključa ni, lahko vrne privzeto vrednost.", "slovar.get(ključ, privzeto)", "stevci[x] = stevci.get(x, 0) + 1", "Za varno branje ključa in posebej za števce oziroma akumulacijo.", "Za razliko od slovar[ključ] odsoten ključ ne povzroči KeyError."),
       f("items", "slovar", "Vrne pare (ključ, vrednost) za iteriranje.", "slovar.items()", "for kljuc, vrednost in slovar.items():\n    print(kljuc, vrednost)", "Ko v zanki potrebuješ hkrati ključ in njegovo vrednost."),
-      f("keys", "slovar", "Vrne pogled na ključe slovarja.", "slovar.keys()", "for kljuc in slovar.keys():\n    print(kljuc)", "Ko te zanimajo samo ključi.", "V for zanki lahko običajno napišeš tudi samo for kljuc in slovar."),
+      f("keys", "slovar", "Vrne pogled na ključe slovarja.", "slovar.keys()", "for kljuc in slovar.keys():\n    print(kljuc)", "Ko te zanimajo samo ključi.", "V for zanki lahko običajno napišeš tudi for kljuc in slovar."),
       f("values", "slovar", "Vrne pogled na vrednosti slovarja.", "slovar.values()", "sum(slovar.values())", "Ko te zanimajo samo vrednosti."),
       f("update", "slovar", "Doda pare drugega slovarja in prepiše vrednosti enakih ključev.", "slovar.update(drugi)", "a = {\"x\": 1}\na.update({\"y\": 2})", "Ko združuješ ali posodabljaš slovarje."),
       f("pop", "slovar · seznam", "Pri slovarju odstrani ključ in vrne njegovo vrednost.", "slovar.pop(ključ)", "vrednost = podatki.pop(\"masa\")", "Ko želiš podatek iz slovarja hkrati vzeti in odstraniti."),
@@ -91,21 +108,23 @@ const functionGroups = [
     ]
   },
   {
-    title: "NumPy — ustvarjanje in oblika",
-    description: "Ustvarjanje tabel ter preverjanje in spreminjanje njihove oblike.",
+    title: "NumPy — ustvarjanje, oblika in tipi",
+    description: "Ustvarjanje tabel, njihove dimenzije, preoblikovanje in podatkovni tipi.",
     entries: [
       f("np.array", "NumPy", "Iz Python zaporedja ustvari NumPy tabelo.", "np.array(podatki)", "a = np.array([1, 2, 3])", "Ko želiš uporabljati vektorizirane NumPy operacije."),
-      f("np.zeros", "NumPy", "Ustvari tabelo ničel dane oblike.", "np.zeros(shape)", "np.zeros((3, 4))", "Za začetno prazno numerično tabelo ali rezervacijo prostora."),
-      f("np.ones", "NumPy", "Ustvari tabelo enic dane oblike.", "np.ones(shape)", "np.ones((2, 3))", "Ko potrebuješ začetno tabelo enic."),
-      f("np.arange", "NumPy", "Ustvari enakomerno zaporedje z določenim korakom; konec ni vključen.", "np.arange(start, stop, step)", "np.arange(0, 10, 2)  # [0 2 4 6 8]", "Ko poznaš korak med vrednostmi.", "Pri decimalnih korakih bodi pozorna na plavajočo vejico."),
+      f("np.zeros", "NumPy", "Ustvari tabelo ničel dane oblike.", "np.zeros(shape, dtype=float)", "np.zeros((3, 4))\nnp.zeros((2, 2), dtype=int)", "Za začetno prazno numerično tabelo ali rezervacijo prostora."),
+      f("np.ones", "NumPy", "Ustvari tabelo enic dane oblike.", "np.ones(shape, dtype=float)", "np.ones((2, 3))", "Ko potrebuješ začetno tabelo enic."),
+      f("np.arange", "NumPy", "Ustvari enakomerno zaporedje z določenim korakom; konec ni vključen.", "np.arange(start, stop, step)", "np.arange(0, 10, 2)  # [0 2 4 6 8]", "Ko poznaš korak med vrednostmi.", "Če poznaš število želenih točk, je pogosto boljši np.linspace(...)."),
       f("np.linspace", "NumPy", "Ustvari določeno število enakomerno razporejenih vrednosti med robovoma.", "np.linspace(start, stop, num)", "np.linspace(0, 1, 5)", "Ko poznaš število želenih točk, ne koraka.", "Privzeto sta oba robova vključena."),
-      f("np.shape", "NumPy", "Vrne obliko tabele kot tuple dimenzij.", "np.shape(tab)", "np.shape(tab)  # npr. (3, 4)", "Ko potrebuješ število vrstic, stolpcev ali drugih dimenzij."),
-      f("tab.shape", "NumPy", "Atribut oblike NumPy tabele.", "tab.shape", "n, m = tab.shape", "Najpogostejši način za razpakiranje števila vrstic in stolpcev."),
-      f("np.size", "NumPy", "Vrne skupno število elementov ali velikost izbrane osi.", "np.size(tab)\nnp.size(tab, axis=0)", "np.size(np.zeros((2, 3)))  # 6", "Ko potrebuješ skupno število elementov."),
-      f("np.reshape", "NumPy", "Vrne pogled/kopijo tabele z novo obliko, če je število elementov združljivo.", "np.reshape(tab, newshape)\ntab.reshape(newshape)", "np.arange(6).reshape((2, 3))", "Ko želiš iste elemente preurediti v drugo dimenzionalnost."),
-      f("np.newaxis", "NumPy", "Poseben indeks, ki doda os dolžine 1.", "tab[np.newaxis, :]\ntab[:, np.newaxis]", "a = np.array([1, 2, 3])\na[:, np.newaxis]  # stolpec oblike (3, 1)", "Ko moraš 1D tabelo spremeniti v vrstico ali stolpec za broadcasting/združevanje."),
+      f("np.shape", "NumPy", "Vrne obliko tabele kot tuple dimenzij.", "np.shape(tab)", "np.shape(tab)  # npr. (3, 4)", "Ko potrebuješ število elementov po posameznih oseh."),
+      f("tab.shape", "NumPy", "Atribut, ki vsebuje obliko NumPy tabele.", "tab.shape", "n, m = tab.shape", "Najpogostejši način za razpakiranje števila vrstic in stolpcev."),
+      f("np.size", "NumPy", "Vrne skupno število elementov ali velikost izbrane osi.", "np.size(tab)\nnp.size(tab, axis=0)", "np.size(np.zeros((2, 3)))  # 6", "Ko potrebuješ skupno število elementov ali velikost osi."),
+      f("np.reshape", "NumPy", "Vrne tabelo z novo obliko, če ostane enako število elementov.", "np.reshape(tab, newshape)\ntab.reshape(newshape)", "np.arange(6).reshape((2, 3))", "Ko želiš iste elemente preurediti v drugo obliko."),
+      f("tab.T", "NumPy", "Transponira tabelo: vrstice in stolpci zamenjajo vloge.", "tab.T", "a = np.array([[1, 2], [3, 4]])\na.T", "Ko želiš transponirano matriko ali moraš zamenjati osi pri 2D tabeli."),
+      f("np.newaxis", "NumPy", "Pri indeksiranju doda novo os dolžine 1.", "tab[np.newaxis, :]\ntab[:, np.newaxis]", "a = np.array([1, 2, 3])\na[:, np.newaxis]  # oblika (3, 1)", "Ko 1D tabelo spreminjaš v vrstico ali stolpec za broadcasting ali združevanje."),
       f("np.atleast_2d", "NumPy", "Poskrbi, da ima vhod vsaj dve dimenziji.", "np.atleast_2d(tab)", "np.atleast_2d([1, 2, 3])  # oblika (1, 3)", "Ko funkcija zahteva 2D tabelo, vhod pa je lahko 1D."),
-      f("np.fromfunction", "NumPy", "Ustvari tabelo tako, da funkcijo izračuna na indeksih.", "np.fromfunction(function, shape)", "np.fromfunction(lambda i, j: i + j, (3, 4))", "Ko je vrednost elementa določena s formulo glede na indeks."),
+      f("astype", "NumPy", "Pretvori podatkovni tip elementov in vrne novo tabelo.", "tab.astype(tip)", "graf = (tab > 0).astype(int)\nx = tab.astype(float)", "Ko želiš npr. bool pretvoriti v 0/1 ali integer v float.", "Originalne tabele ne spremeni; rezultat shrani ali vrni."),
+      f("np.fromfunction", "NumPy", "Ustvari tabelo tako, da funkcijo izračuna na indeksih.", "np.fromfunction(function, shape)", "np.fromfunction(lambda i, j: i + j, (3, 4))", "Ko je vrednost elementa določena s formulo glede na njegov indeks."),
       f("np.meshgrid", "NumPy", "Iz koordinatnih 1D tabel naredi koordinatne mreže.", "np.meshgrid(x, y, indexing=\"ij\")", "i, j = np.meshgrid(np.arange(n), np.arange(m), indexing=\"ij\")", "Ko potrebuješ vse kombinacije koordinat ali indeksov.")
     ]
   },
@@ -116,8 +135,9 @@ const functionGroups = [
       f("np.append", "NumPy", "Vrne novo tabelo z dodanimi vrednostmi.", "np.append(arr, values, axis=None)", "nova = np.append(a, b)", "Za preprosto dodajanje vrednosti, predvsem pri 1D tabelah.", "Brez axis tabeli splošči; originala ne spremeni."),
       f("np.concatenate", "NumPy", "Združi zaporedje tabel vzdolž izbrane osi.", "np.concatenate([a, b], axis=0)", "np.concatenate([a, b])", "Ko združuješ tabele enakih dimenzij po določeni osi."),
       f("np.vstack", "NumPy", "Zloži tabele navpično; 1D tabele postanejo vrstice.", "np.vstack([a, b])", "np.vstack([np.array([1, 2]), np.array([3, 4])])", "Ko želiš iz več vrstic sestaviti 2D tabelo."),
+      f("np.hstack", "NumPy", "Zloži tabele vodoravno.", "np.hstack([a, b])", "np.hstack([np.array([1, 2]), np.array([3, 4])])", "Ko želiš podatke dodati v smeri stolpcev oziroma vodoravno."),
       f("np.flip", "NumPy", "Obrne vrstni red elementov po vseh ali izbrani osi.", "np.flip(tab, axis=None)", "np.flip(tab, axis=0)", "Ko želiš obrniti vrstice, stolpce ali celotno zaporedje."),
-      f("np.roll", "NumPy", "Ciklično premakne elemente; elementi z roba se pojavijo na drugem robu.", "np.roll(tab, shift, axis=None)", "np.roll(np.array([1, 2, 3]), 1)  # [3 1 2]", "Pri periodičnih premikih ali sosednjih vrednostih."),
+      f("np.roll", "NumPy", "Ciklično premakne elemente; elementi z roba se pojavijo na drugem robu.", "np.roll(tab, shift, axis=None)", "np.roll(np.array([1, 2, 3]), 1)  # [3 1 2]", "Pri periodičnih premikih ali primerjanju s sosednjimi elementi."),
       f("np.pad", "NumPy", "Doda rob okoli tabele po izbranem načinu.", "np.pad(tab, pad_width, mode=\"constant\")", "np.pad(np.array([1, 2, 3]), 1)  # [0 1 2 3 0]", "Ko potrebuješ dodatne robne elemente, pogosto ničle."),
       f("np.sort", "NumPy", "Vrne urejeno kopijo tabele vzdolž izbrane osi.", "np.sort(tab, axis=-1)", "np.sort(np.array([3, 1, 2]))  # [1 2 3]", "Ko želiš urejene NumPy podatke brez spreminjanja originala.")
     ]
@@ -127,44 +147,56 @@ const functionGroups = [
     description: "Vektorizirani pogoji: brez ročnih zank preveri ali izberi več elementov naenkrat.",
     entries: [
       f("np.where", "NumPy", "Za vsak element izbere eno vrednost, če pogoj velja, in drugo, če ne.", "np.where(pogoj, če_velja, če_ne_velja)", "pozitivni = np.where(tab > 0, tab, 0)", "Ko želiš elemente pogojno zamenjati ali izdelati novo tabelo glede na masko."),
-      f("np.all", "NumPy", "Vrne True, če so vsi elementi pogoja True; lahko po osi.", "np.all(pogoj, axis=None)", "np.all(tab > 0)", "Ko mora NumPy pogoj veljati za vse elemente."),
-      f("np.any", "NumPy", "Vrne True, če je vsaj en element pogoja True; lahko po osi.", "np.any(pogoj, axis=None)", "np.any(tab == 0)", "Ko preverjaš, ali obstaja vsaj en element z določeno lastnostjo."),
-      f("np.nonzero", "NumPy", "Vrne tuple tabel indeksov elementov, ki niso 0 oziroma kjer pogoj velja.", "np.nonzero(pogoj)", "vrstice, stolpci = np.nonzero(tab > 0)", "Ko pri večdimenzionalni tabeli potrebuješ indekse po posameznih oseh."),
+      f("np.all", "NumPy", "Vrne True, če so vsi elementi pogoja True; lahko računa tudi po osi.", "np.all(pogoj, axis=None)", "np.all(tab > 0)", "Ko mora NumPy pogoj veljati za vse elemente."),
+      f("np.any", "NumPy", "Vrne True, če je vsaj en element pogoja True; lahko računa tudi po osi.", "np.any(pogoj, axis=None)", "np.any(tab == 0)", "Ko preverjaš, ali obstaja vsaj en element z določeno lastnostjo."),
+      f("np.less_equal", "NumPy", "Element po elementu preveri manjše ali enako.", "np.less_equal(a, b)", "maska = np.less_equal(a, b)", "Ko želiš eksplicitno funkcijsko obliko primerjave a <= b.", "V večini nalog je krajši in preglednejši zapis a <= b."),
+      f("np.nonzero", "NumPy", "Vrne tuple tabel indeksov elementov, kjer je vrednost neničelna oziroma kjer pogoj velja.", "np.nonzero(pogoj)", "vrstice, stolpci = np.nonzero(tab > 0)", "Ko pri večdimenzionalni tabeli potrebuješ indekse po posameznih oseh."),
       f("np.flatnonzero", "NumPy", "Vrne 1D indekse neničelnih elementov sploščene tabele.", "np.flatnonzero(pogoj)", "idx = np.flatnonzero(a > b)", "Ko želiš enostaven seznam indeksov pri 1D podatkih ali sploščenem pogledu."),
       f("np.argmax", "NumPy", "Vrne indeks največje vrednosti.", "np.argmax(tab, axis=None)", "i = np.argmax(vrednosti)", "Ko poleg maksimuma potrebuješ njegov položaj."),
       f("np.argmin", "NumPy", "Vrne indeks najmanjše vrednosti.", "np.argmin(tab, axis=None)", "i = np.argmin(vrednosti)", "Ko poleg minimuma potrebuješ njegov položaj.")
     ]
   },
   {
-    title: "NumPy — agregacije in statistika",
+    title: "NumPy — agregacije, osi in statistika",
     description: "Funkcije, ki več vrednosti združijo v eno ali v rezultat po izbrani osi.",
     entries: [
-      f("np.sum", "NumPy", "Sešteje elemente celotne tabele ali po osi.", "np.sum(tab, axis=None)", "vsote_vrstic = np.sum(tab, axis=1)", "Za vektorizirano seštevanje tabele, vrstic ali stolpcev."),
-      f("np.min", "NumPy", "Vrne najmanjšo vrednost celotne tabele ali po osi.", "np.min(tab, axis=None)", "minimumi = np.min(tab, axis=1)", "Ko potrebuješ minimume po vrsticah/stolpcih ali globalni minimum."),
+      f("np.sum", "NumPy", "Sešteje elemente celotne tabele ali po osi.", "np.sum(tab, axis=None)", "vsote_vrstic = np.sum(tab, axis=1)", "Za vektorizirano seštevanje tabele, vrstic ali stolpcev.", "axis=0 združuje po vrsticah in vrne rezultat za vsak stolpec; axis=1 združuje po stolpcih in vrne rezultat za vsako vrstico."),
+      f("np.min", "NumPy", "Vrne najmanjšo vrednost celotne tabele ali po osi.", "np.min(tab, axis=None)", "minimumi = np.min(tab, axis=1)", "Ko potrebuješ minimume po vrsticah, stolpcih ali globalni minimum."),
       f("np.max", "NumPy", "Vrne največjo vrednost celotne tabele ali po osi.", "np.max(tab, axis=None)", "maksimumi = np.max(tab, axis=0)", "Ko potrebuješ maksimume po osi ali globalni maksimum."),
-      f("np.maximum", "NumPy", "Primerja dve tabeli element po elementu in vrne večjo vrednost na vsakem mestu.", "np.maximum(a, b)", "np.maximum(np.array([1, 5]), np.array([3, 2]))  # [3 5]", "Ko primerjaš dve enako oblikovani oziroma broadcastabilni tabeli element po elementu.", "Ni isto kot np.max(...), ki zmanjša število vrednosti."),
+      f("np.maximum", "NumPy", "Primerja dve tabeli element po elementu in na vsakem mestu vrne večjo vrednost.", "np.maximum(a, b)", "np.maximum(np.array([1, 5]), np.array([3, 2]))  # [3 5]", "Ko primerjaš dve tabeli element po elementu.", "Ni isto kot np.max(...), ki zmanjša število vrednosti."),
       f("np.mean", "NumPy", "Izračuna aritmetično povprečje.", "np.mean(tab, axis=None)", "np.mean(tab, axis=0)", "Ko želiš navadno povprečje celotne tabele ali po osi."),
       f("np.average", "NumPy", "Izračuna povprečje; omogoča tudi uteži.", "np.average(tab, axis=None, weights=None)", "np.average(tab, axis=0)", "Za povprečje, posebej če potrebuješ uteženo povprečje."),
       f("np.std", "NumPy", "Izračuna standardni odklon.", "np.std(tab, axis=None)", "np.std(meritve)", "Ko ocenjuješ razpršenost numeričnih podatkov."),
       f("np.prod", "NumPy", "Zmnoži elemente.", "np.prod(tab, axis=None)", "np.prod(np.array([2, 3, 4]))  # 24", "Ko potrebuješ produkt več elementov."),
-      f("np.cumsum", "NumPy", "Vrne kumulativne vsote.", "np.cumsum(tab, axis=None)", "np.cumsum([2, 3, 4])  # [2 5 9]", "Ko želiš tekočo oziroma sprotno vsoto." )
+      f("np.cumsum", "NumPy", "Vrne kumulativne vsote.", "np.cumsum(tab, axis=None)", "np.cumsum([2, 3, 4])  # [2 5 9]", "Ko želiš tekočo oziroma sprotno vsoto.")
     ]
   },
   {
     title: "NumPy — matematične funkcije",
-    description: "Funkcije delujejo element po elementu na celotni tabeli.",
+    description: "Funkcije delujejo element po elementu na celotni NumPy tabeli.",
     entries: [
-      f("np.abs", "NumPy", "Vrne absolutno vrednost vsakega elementa.", "np.abs(tab)", "odstopanja = np.abs(meritve - pricakovano)", "Za absolutne razlike in velikosti vrednosti v tabeli."),
-      f("np.sqrt", "NumPy", "Izračuna kvadratni koren element po elementu.", "np.sqrt(tab)", "np.sqrt(np.array([1, 4, 9]))  # [1. 2. 3.]", "Ko uporabljaš koren na NumPy podatkih."),
-      f("np.square", "NumPy", "Kvadrira vsak element.", "np.square(tab)", "np.square(np.array([2, 3]))  # [4 9]", "Ko želiš elementne kvadrate; podobno kot tab ** 2."),
-      f("np.sin", "NumPy", "Izračuna sinus element po elementu; vhod je v radianih.", "np.sin(tab)", "np.sin(np.radians([0, 30, 90]))", "Za trigonometrične izračune nad tabelami."),
-      f("np.cos", "NumPy", "Izračuna kosinus element po elementu; vhod je v radianih.", "np.cos(tab)", "np.cos(np.radians([0, 60, 90]))", "Za trigonometrične izračune nad tabelami."),
-      f("np.arcsin", "NumPy", "Izračuna inverzni sinus; rezultat je v radianih.", "np.arcsin(tab)", "kot = np.degrees(np.arcsin(0.5))  # 30", "Ko iz vrednosti sinusa iščeš kot."),
-      f("np.exp", "NumPy", "Izračuna e na potenco vsakega elementa.", "np.exp(tab)", "np.exp(np.array([0, 1]))", "Pri eksponentnih funkcijah nad več vrednostmi."),
-      f("np.log", "NumPy", "Izračuna naravni logaritem element po elementu.", "np.log(tab)", "np.log(np.array([1, np.e]))", "Pri logaritmih pozitivnih NumPy vrednosti."),
-      f("np.radians", "NumPy", "Pretvori stopinje v radiane.", "np.radians(stopinje)", "r = np.radians([0, 90, 180])", "Pred np.sin/np.cos, če so koti podani v stopinjah."),
-      f("np.degrees", "NumPy", "Pretvori radiane v stopinje.", "np.degrees(radiani)", "np.degrees(np.pi / 2)  # 90", "Ko želiš rezultat kota prikazati v stopinjah."),
-      f("np.pi", "NumPy", "Konstanta π.", "np.pi", "kot = np.pi / 2", "Ko v NumPy izračunih potrebuješ π.", "To ni funkcija, zato nima oklepajev.")
+      f("np.abs", "NumPy · matematika", "Vrne absolutno vrednost vsakega elementa.", "np.abs(tab)", "odstopanja = np.abs(meritve - pricakovano)", "Za absolutne razlike in velikosti vrednosti v tabeli."),
+      f("np.sqrt", "NumPy · matematika", "Izračuna kvadratni koren element po elementu.", "np.sqrt(tab)", "np.sqrt(np.array([1, 4, 9]))  # [1. 2. 3.]", "Ko uporabljaš koren na več NumPy vrednostih."),
+      f("np.square", "NumPy · matematika", "Kvadrira vsak element.", "np.square(tab)", "np.square(np.array([2, 3]))  # [4 9]", "Ko želiš elementne kvadrate.", "Enakovreden pogost zapis je tab ** 2."),
+      f("np.sin", "NumPy · matematika", "Izračuna sinus vsakega elementa; koti morajo biti v radianih.", "np.sin(koti)", "koti = np.radians([0, 30, 90])\nnp.sin(koti)", "Ko računaš sinus za eno ali več NumPy vrednosti.", "Za eno navadno Python število lahko uporabiš math.sin(...)."),
+      f("np.cos", "NumPy · matematika", "Izračuna kosinus vsakega elementa; koti morajo biti v radianih.", "np.cos(koti)", "np.cos(np.radians([0, 60, 90]))", "Ko računaš kosinus za NumPy podatke."),
+      f("np.arcsin", "NumPy · matematika", "Inverzni sinus: iz vrednosti sinusa izračuna kot v radianih, element po elementu.", "np.arcsin(vrednosti)", "koti = np.arcsin(np.array([0, 0.5, 1]))", "Ko iz vrednosti sinusa iščeš kote za celo tabelo.", "Za eno število v knjižnici math se funkcija imenuje math.asin(...), ne math.arcsin(...)."),
+      f("np.exp", "NumPy · matematika", "Izračuna e na potenco vsakega elementa.", "np.exp(tab)", "np.exp(np.array([0, 1]))", "Pri eksponentnih funkcijah nad več vrednostmi."),
+      f("np.log", "NumPy · matematika", "Izračuna naravni logaritem element po elementu.", "np.log(tab)", "np.log(np.array([1, np.e]))", "Pri logaritmih pozitivnih NumPy vrednosti."),
+      f("np.radians", "NumPy · matematika", "Pretvori stopinje v radiane element po elementu.", "np.radians(stopinje)", "r = np.radians([0, 90, 180])", "Pred np.sin/np.cos, če so koti podani v stopinjah."),
+      f("np.degrees", "NumPy · matematika", "Pretvori radiane v stopinje element po elementu.", "np.degrees(radiani)", "np.degrees(np.pi / 2)  # 90.0", "Ko želiš rezultate kotov prikazati v stopinjah."),
+      f("np.pi", "NumPy · matematika", "Konstanta π.", "np.pi", "t = np.linspace(0, 2 * np.pi, 100)", "Ko v NumPy izračunih potrebuješ π.", "To ni funkcija, zato nima oklepajev.")
+    ]
+  },
+  {
+    title: "NumPy — kompleksna števila in posebne vrednosti",
+    description: "Funkcije in zapisi, ki se pojavijo v zvezku pri kompleksnih podatkih in manjkajočih vrednostih.",
+    entries: [
+      f("np.real", "NumPy · kompleksna", "Vrne realni del vsakega kompleksnega elementa.", "np.real(tab)", "realni = np.real(np.array([1 + 2j, 3 + 0j]))", "Ko iz kompleksne NumPy tabele potrebuješ samo realne komponente."),
+      f("np.imag", "NumPy · kompleksna", "Vrne imaginarni del vsakega kompleksnega elementa.", "np.imag(tab)", "imaginarni = np.imag(np.array([1 + 2j, 3 + 0j]))", "Ko želiš preverjati ali uporabljati imaginarne komponente."),
+      f("np.nan", "NumPy · posebna vrednost", "Posebna vrednost 'Not a Number', pogosto za manjkajoč ali neveljaven numerični rezultat.", "np.nan", "rezultat = np.array([1.2, np.nan, 3.4])", "Ko moraš v numerični tabeli označiti, da veljavne številčne vrednosti ni.", "To ni funkcija, zato nima oklepajev."),
+      f("1j", "Python · NumPy · kompleksna", "Imaginarna enota. Z njo zapisuješ kompleksna števila.", "a + b * 1j\n# ali: a + bj", "z = 2 + 3j\nnp.real(z)  # 2\nnp.imag(z)  # 3", "Ko naloga uporablja kompleksna števila."),
+      f("astype", "NumPy · tip podatkov", "Pretvori elemente tabele v drug podatkovni tip.", "tab.astype(int)\ntab.astype(float)", "maska = (tab > 0).astype(int)", "Ko želiš npr. True/False pretvoriti v 1/0 ali spremeniti numerični tip.", "Vrne novo tabelo; original ostane nespremenjen.")
     ]
   }
 ];
@@ -177,7 +209,7 @@ function renderFunctionEntry(entry) {
 
   return `
     <details class="function-entry search-item" data-keywords="${esc(
-      `${entry.name} ${entry.target} ${entry.meaning} ${entry.when}`
+      `${entry.name} ${entry.target} ${entry.meaning} ${entry.when} ${entry.note}`
     )}">
       <summary>
         <code>${esc(entry.name)}</code>
@@ -201,6 +233,39 @@ function renderFunctionEntry(entry) {
     </details>`;
 }
 
+function installFunctionReferenceFixes() {
+  const style = document.createElement("style");
+  style.textContent = `
+    .function-two-col {
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .function-two-col > div {
+      min-width: 0;
+    }
+
+    .function-two-col pre {
+      height: auto !important;
+      min-height: 88px;
+      margin: 5px 0 0 !important;
+    }
+
+    .function-body > p {
+      clear: both;
+      margin-top: 0 !important;
+      padding-top: 2px;
+    }
+
+    @media (max-width: 920px) {
+      .function-two-col pre {
+        min-height: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function buildFunctionReference() {
   const section = document.querySelector("#funkcije");
   if (!section) return;
@@ -222,8 +287,8 @@ function buildFunctionReference() {
   const intro = `
     <div class="function-legend">
       <strong>Kako bereš indeks:</strong>
-      oznake ob imenu pokažejo, ali funkcijo uporabljaš na nizu, seznamu, slovarju, datoteki ali NumPy tabeli.
-      Funkcije in metode so spodaj razdeljene po sklopih; posamezen zapis odpreš s klikom.
+      oznake ob imenu pokažejo, ali funkcijo uporabljaš na nizu, seznamu, slovarju, datoteki, enem številu ali NumPy tabeli.
+      Pri matematiki si zapomni predvsem razliko: <code>math.sin(x)</code> za eno število in <code>np.sin(tab)</code> za NumPy tabelo; inverzni sinus je <code>math.asin(x)</code> oziroma <code>np.arcsin(tab)</code>.
     </div>`;
 
   const groups = functionGroups
@@ -291,6 +356,7 @@ function cleanGeneralPageLabels() {
 }
 
 cleanGeneralPageLabels();
+installFunctionReferenceFixes();
 buildFunctionReference();
 
 const searchInput = document.querySelector("#search");
