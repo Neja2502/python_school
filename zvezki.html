@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zvezki — Python priročnik</title>
+  <style>
+    :root { --bg:#181818; --panel:#222; --border:#383838; --text:#eee; --muted:#aaa; --accent:#4daafc; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { padding:16px 22px; border-bottom:1px solid var(--border); }
+    header a { color:#cfd8e3; text-decoration:none; font-weight:700; }
+    main { width:min(900px,calc(100% - 32px)); margin:54px auto; }
+    h1 { font-size:2rem; margin:0 0 8px; }
+    .lead { color:var(--muted); margin:0 0 28px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .card { display:block; padding:22px; border:1px solid var(--border); border-radius:8px; background:var(--panel); color:inherit; text-decoration:none; }
+    .card:hover { border-color:#5a5a5a; transform:translateY(-1px); }
+    .card h2 { margin:0 0 6px; font-size:1.25rem; color:white; }
+    .card p { margin:0; color:var(--muted); }
+    .tag { display:inline-block; margin-top:14px; color:var(--accent); font-weight:700; }
+    @media(max-width:650px){ .grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <header><a href="index.html">← Python priročnik</a></header>
+  <main>
+    <h1>Zvezki</h1>
+    <p class="lead">Odpri zvezek v preglednem načinu z levim kazalom, iskanjem po poglavjih, kodo in izhodi.</p>
+    <div class="grid">
+      <a class="card" href="notebook.html?file=snov.ipynb">
+        <h2>Snov</h2>
+        <p>Teorija, primeri, Python in NumPy.</p>
+        <span class="tag">Odpri zvezek →</span>
+      </a>
+      <a class="card" href="notebook.html?file=izpitiRP.ipynb">
+        <h2>Izpiti RP</h2>
+        <p>Rešene in obdelane izpitne naloge.</p>
+        <span class="tag">Odpri zvezek →</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
