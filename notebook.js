@@ -25,6 +25,10 @@
   const tocCountEl = document.querySelector('#toc-count');
   const tabsEl = document.querySelector('#notebook-tabs');
   const toggleCodeBtn = document.querySelector('#toggle-code');
+  const quickJumpsEl = document.querySelector('#quick-jumps');
+  const quickJumpsTitleEl = document.querySelector('#quick-jumps-title');
+  const quickJumpsDescriptionEl = document.querySelector('#quick-jumps-description');
+  const quickJumpsListEl = document.querySelector('#quick-jumps-list');
 
   document.title = `${meta.title} — Python priročnik`;
   nameEl.textContent = meta.title;
@@ -119,18 +123,50 @@
     return div;
   }
 
-  function addTocEntry(heading, level, used) {
-    const text = heading.textContent.trim();
-    if (!text) return;
-    const id = slugify(text, used);
-    heading.id = id;
+  function createTocLink(target, text, level, used, synthetic = false) {
+    const label = String(text || '').trim();
+    if (!label) return null;
+    const id = slugify(label, used);
+    target.id = id;
+    target.dataset.tocTarget = 'true';
+
     const link = document.createElement('a');
     link.href = `#${id}`;
-    link.className = `level-${level}`;
-    link.textContent = text;
-    link.title = text;
+    link.className = `level-${level}${synthetic ? ' synthetic' : ''}`;
+    link.textContent = label;
+    link.title = label;
     link.dataset.headingId = id;
     tocEl.appendChild(link);
+    return link;
+  }
+
+  function firstMeaningfulLine(source) {
+    const lines = asText(source)
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (!lines.length) return '';
+    return lines[0]
+      .replace(/^#{1,6}\s*/, '')
+      .replace(/^[>*+-]\s+/, '')
+      .replace(/[`*_]/g, '')
+      .replace(/<[^>]+>/g, '')
+      .trim();
+  }
+
+  function isSyntheticLandmark(text) {
+    if (!text || text.length > 110) return false;
+    const cleaned = normalize(text);
+
+    if (file === 'snov.ipynb') {
+      const topic = /(uvod|osnov|funkcij|pogoj|zank|niz|seznam|nabor|mnoz|slovar|datotek|razred|numpy|sklad|ulomk)/;
+      const numbered = /^\d+[.)]\s+/.test(text);
+      const shortTitle = text.split(/\s+/).length <= 8;
+      return topic.test(cleaned) && (numbered || shortTitle);
+    }
+
+    const examMarker = /(izpit|izpitni rok|rok|kolokvij|20\d{2}\s*\/\s*\d{2}|\b\d{2}\s*\/\s*\d{2}\b)/;
+    return examMarker.test(cleaned) && !/\bnalog/.test(cleaned);
   }
 
   function addCopyButton(input, codeText) {
@@ -150,12 +186,60 @@
     input.appendChild(button);
   }
 
+  function buildQuickJumps() {
+    const allLinks = [...tocEl.querySelectorAll('a[data-heading-id]')];
+    if (!allLinks.length) return;
+
+    let candidates;
+    if (file === 'snov.ipynb') {
+      const topic = /(uvod|osnov|funkcij|pogoj|zank|niz|seznam|nabor|mnoz|slovar|datotek|razred|numpy|sklad|ulomk)/;
+      candidates = allLinks.filter((link) => {
+        const levelMatch = link.className.match(/level-(\d)/);
+        const level = levelMatch ? Number(levelMatch[1]) : 6;
+        return level <= 2 || topic.test(normalize(link.textContent));
+      });
+      quickJumpsTitleEl.textContent = 'Glavna poglavja';
+      quickJumpsDescriptionEl.textContent = 'Klikni na temo in skoči neposredno na njeno mesto v zvezku.';
+    } else {
+      const examMarker = /(izpit|izpitni rok|rok|kolokvij|20\d{2}\s*\/\s*\d{2}|\b\d{2}\s*\/\s*\d{2}\b)/;
+      candidates = allLinks.filter((link) => {
+        const text = normalize(link.textContent);
+        return examMarker.test(text) && !/\bnalog/.test(text);
+      });
+      quickJumpsTitleEl.textContent = 'Izpiti';
+      quickJumpsDescriptionEl.textContent = 'Izberi izpit in skoči neposredno na začetek tega izpita.';
+    }
+
+    if (!candidates.length) candidates = allLinks.slice(0, 18);
+
+    const seen = new Set();
+    const unique = [];
+    for (const link of candidates) {
+      const key = `${normalize(link.textContent)}|${link.getAttribute('href')}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(link);
+      if (unique.length >= 24) break;
+    }
+
+    if (!unique.length) return;
+    quickJumpsListEl.replaceChildren();
+    unique.forEach((sourceLink) => {
+      const link = document.createElement('a');
+      link.href = sourceLink.getAttribute('href');
+      link.textContent = sourceLink.textContent;
+      link.title = sourceLink.textContent;
+      quickJumpsListEl.appendChild(link);
+    });
+    quickJumpsEl.hidden = false;
+  }
+
   function installActiveHeadingObserver() {
-    const headings = [...notebookEl.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]')];
-    if (!headings.length || !('IntersectionObserver' in window)) return;
+    const targets = [...notebookEl.querySelectorAll('[data-toc-target="true"][id]')];
+    if (!targets.length || !('IntersectionObserver' in window)) return;
 
     const links = new Map([...tocEl.querySelectorAll('a')].map((a) => [a.dataset.headingId, a]));
-    let currentId = headings[0].id;
+    let currentId = targets[0].id;
 
     const setActive = (id) => {
       if (!id || id === currentId) return;
@@ -173,7 +257,7 @@
       if (visible.length) setActive(visible[0].target.id);
     }, { rootMargin: '-58px 0px -72% 0px', threshold: [0, 1] });
 
-    headings.forEach((heading) => observer.observe(heading));
+    targets.forEach((target) => observer.observe(target));
   }
 
   function renderNotebook(nb) {
@@ -183,12 +267,27 @@
     for (const cell of nb.cells || []) {
       cellIndex += 1;
       if (cell.cell_type === 'markdown') {
+        const rawSource = asText(cell.source);
         const section = document.createElement('section');
         section.className = 'nb-cell markdown-cell';
-        section.dataset.searchText = normalize(asText(cell.source));
+        section.dataset.searchText = normalize(rawSource);
         section.dataset.cellIndex = String(cellIndex);
         section.innerHTML = renderMarkdown(cell);
-        section.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach((h) => addTocEntry(h, Number(h.tagName.slice(1)), usedSlugs));
+
+        const headings = [...section.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+        if (headings.length) {
+          headings.forEach((heading) => {
+            const level = Number(heading.tagName.slice(1));
+            createTocLink(heading, heading.textContent.trim(), level, usedSlugs, false);
+          });
+        } else {
+          const candidate = firstMeaningfulLine(rawSource);
+          if (isSyntheticLandmark(candidate)) {
+            section.classList.add('synthetic-toc-target');
+            createTocLink(section, candidate, file === 'izpitiRP.ipynb' ? 1 : 2, usedSlugs, true);
+          }
+        }
+
         notebookEl.appendChild(section);
         continue;
       }
@@ -237,7 +336,9 @@
 
     const headingCount = tocEl.querySelectorAll('a').length;
     tocCountEl.textContent = headingCount ? `${headingCount} naslovov` : '';
-    if (!headingCount) tocEl.innerHTML = '<div class="toc-footer">V zvezku ni Markdown naslovov za samodejno kazalo.</div>';
+    if (!headingCount) tocEl.innerHTML = '<div class="toc-footer">V zvezku ni naslovov za samodejno kazalo.</div>';
+
+    buildQuickJumps();
 
     if (window.hljs) notebookEl.querySelectorAll('pre code.language-python').forEach((block) => hljs.highlightElement(block));
     if (window.MathJax?.typesetPromise) MathJax.typesetPromise([notebookEl]).catch(() => {});
