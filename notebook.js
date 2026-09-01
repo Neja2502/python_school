@@ -54,11 +54,20 @@
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
-  function slugify(text, used) {
-    const base = normalize(text)
+  function headingSlug(text) {
+    return String(text ?? '')
+      .trim()
+      .toLocaleLowerCase('sl')
+      .normalize('NFC')
       .replace(/<[^>]*>/g, '')
-      .replace(/[^a-z0-9čšžćđ]+/gi, '-')
+      .replace(/[^\p{L}\p{N}_ -]/gu, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
       .replace(/^-+|-+$/g, '') || 'poglavje';
+  }
+
+  function slugify(text, used) {
+    const base = headingSlug(text);
     let slug = base;
     let n = 2;
     while (used.has(slug)) slug = `${base}-${n++}`;
@@ -138,6 +147,33 @@
     link.dataset.headingId = id;
     tocEl.appendChild(link);
     return link;
+  }
+
+  function repairInternalNotebookLinks() {
+    const targetByLabel = new Map(
+      [...tocEl.querySelectorAll('a[data-heading-id]')].map((link) => [
+        headingSlug(link.textContent),
+        link.dataset.headingId
+      ])
+    );
+
+    notebookEl.querySelectorAll('a[href^="#"]').forEach((link) => {
+      const href = link.getAttribute('href');
+      let fragment;
+      try {
+        fragment = decodeURIComponent(href.slice(1));
+      } catch {
+        fragment = href.slice(1);
+      }
+
+      if (document.getElementById(fragment)) return;
+
+      const targetId =
+        targetByLabel.get(headingSlug(link.textContent)) ||
+        targetByLabel.get(headingSlug(fragment));
+
+      if (targetId) link.href = `#${targetId}`;
+    });
   }
 
   function firstMeaningfulLine(source) {
@@ -334,6 +370,8 @@
       notebookEl.appendChild(other);
     }
 
+    repairInternalNotebookLinks();
+
     const headingCount = tocEl.querySelectorAll('a').length;
     tocCountEl.textContent = headingCount ? `${headingCount} naslovov` : '';
     if (!headingCount) tocEl.innerHTML = '<div class="toc-footer">V zvezku ni naslovov za samodejno kazalo.</div>';
@@ -347,6 +385,16 @@
     notebookEl.hidden = false;
     installActiveHeadingObserver();
     updateSearch();
+
+    if (location.hash) {
+      let targetId;
+      try {
+        targetId = decodeURIComponent(location.hash.slice(1));
+      } catch {
+        targetId = location.hash.slice(1);
+      }
+      requestAnimationFrame(() => document.getElementById(targetId)?.scrollIntoView());
+    }
   }
 
   function updateSearch() {
@@ -416,6 +464,30 @@
   toggleCodeBtn.addEventListener('click', () => {
     const hidden = notebookEl.classList.toggle('code-hidden');
     toggleCodeBtn.textContent = hidden ? 'Prikaži kodo' : 'Skrij kodo';
+  });
+
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest?.('a[href^="#"]');
+    if (!link) return;
+
+    let targetId;
+    try {
+      targetId = decodeURIComponent(link.getAttribute('href').slice(1));
+    } catch {
+      targetId = link.getAttribute('href').slice(1);
+    }
+
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    if (target.closest('.search-hidden')) {
+      searchEl.value = '';
+      updateSearch();
+    }
+
+    history.pushState(null, '', `#${encodeURIComponent(targetId)}`);
+    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   });
 
   document.querySelector('#scroll-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
