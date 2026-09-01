@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'snov.ipynb'
+      - 'izpitiRP.ipynb'
       - '.github/workflows/add-notebook-tocs.yml'
       - 'scripts/add_notebook_toc.py'
   workflow_dispatch:
