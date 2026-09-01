@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Hiter pregled Python in NumPy sintakse za izpit."
+    />
+    <title>Python & NumPy — hitri izpitni priročnik</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="brand">Python & NumPy</h2>
+        <p class="brand-subtitle">Hitri izpitni priročnik</p>
+
+        <div class="nav-label">Kazalo</div>
+        <nav class="nav" aria-label="Glavno kazalo">
+          <a class="emphasis" href="#hitro">Najhitrejši pregled</a>
+          <a href="#osnove">Osnove in funkcije</a>
+          <a href="#zanke">Pogoji in zanke</a>
+          <a href="#nizi">Nizi</a>
+          <a href="#seznami">Seznami, nabori, množice</a>
+          <a href="#slovarji">Slovarji</a>
+          <a href="#datoteke">Datoteke</a>
+          <a href="#numpy">NumPy</a>
+          <a href="#vzorci">Izpitni vzorci</a>
+          <a href="#razredi">Razredi</a>
+          <a href="#funkcije">Indeks funkcij</a>
+          <a href="https://nbviewer.org/github/Neja2502/python_school/blob/main/snov.ipynb">Celoten zvezek</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="hero">
+          <p class="eyebrow">Python · datoteke · NumPy</p>
+          <h1>Hitri izpitni priročnik</h1>
+          <p>
+            Najpomembnejša sintaksa, funkcije in vzorci iz zvezka
+            <code>snov.ipynb</code>. Namenjen je hitremu iskanju: najprej poišči
+            podatkovno strukturo, nato operacijo, ki jo želiš narediti.
+          </p>
+
+          <div class="search-wrap">
+            <label for="search"><strong>Išči po priročniku</strong></label>
+            <input
+              id="search"
+              type="search"
+              placeholder="npr. dodaj v seznam, axis, split, slovar, datoteka ..."
+              autocomplete="off"
+            />
+            <div class="search-hint">
+              Bližnjica: <span class="shortcut">Ctrl</span> +
+              <span class="shortcut">K</span>. Počisti z
+              <span class="shortcut">Esc</span>.
+            </div>
+          </div>
+
+          <div class="notice">
+            Pred uporabo na izpitu preveri, ali so internet in lastni zapiski
+            dovoljeni. Stran ne uporablja umetne inteligence in po nalaganju ne
+            pošilja podatkov nikamor.
+          </div>
+
+          <div class="quick-links">
+            <a href="#indeksiranje">Kako dostopam do elementa?</a>
+            <a href="#axis">Kaj pomeni <code>axis</code>?</a>
+            <a href="#gradnja">Kako gradim rezultat?</a>
+            <a href="#izbira-funkcije">Katero funkcijo uporabim?</a>
+          </div>
+        </header>
+
+        <div id="no-results" class="no-results">
+          Ni zadetkov. Poskusi s krajšim izrazom ali imenom funkcije.
+        </div>
+
+        <section id="hitro" class="section">
+          <div class="section-heading">
+            <h2>Najhitrejši pregled</h2>
+            <p>Najpogostejše razlike, pri katerih se sintaksa zameša.</p>
+          </div>
+
+          <div class="grid">
+            <article id="indeksiranje" class="card wide search-item" data-keywords="indeksiranje dostop element rezanje vrstica stolpec ključ">
+              <h3>Dostop do elementov: kaj gre v oglate oklepaje?</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Struktura</th><th>En element</th><th>Razpon / več elementov</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Niz</td><td><code>niz[i]</code></td><td><code>niz[zacetek:konec:korak]</code></td></tr>
+                    <tr><td>Seznam</td><td><code>seznam[i]</code></td><td><code>seznam[:k]</code></td></tr>
+                    <tr><td>Slovar</td><td><code>slovar[kljuc]</code></td><td>nima indeksnega rezanja</td></tr>
+                    <tr><td>NumPy 1D</td><td><code>tab[i]</code></td><td><code>tab[:k]</code></td></tr>
+                    <tr><td>NumPy 2D</td><td><code>tab[i, j]</code></td><td><code>tab[:n, :m]</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre><code># NumPy: tabela[vrstice, stolpci]
+tab[2, 1]       # en element: vrstica 2, stolpec 1
+tab[2, :]       # celotna vrstica 2
+tab[:, 1]       # celoten stolpec 1
+tab[-1, :]      # zadnja vrstica
+tab[:n, :m]     # vrstice 0..n-1 in stolpci 0..m-1</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="dvopičje rez slicing začetek konec korak">
+              <h3>Kaj pomeni dvopičje?</h3>
+              <pre><code>podatki[zacetek:konec:korak]
+
+podatki[:k]     # od začetka do k, brez k
+podatki[k:]     # od k do konca
+podatki[::2]    # vsak drugi element
+podatki[::-1]   # obrnjeno
+podatki[-1]     # zadnji element</code></pre>
+              <p>Indeks <code>konec</code> se nikoli ne vključi.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="spremeni vrne None mutable append sort numpy">
+              <h3>Spremeni objekt ali vrne novega?</h3>
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><code>seznam.append(x)</code></td><td>spremeni seznam, vrne <code>None</code></td></tr>
+                    <tr><td><code>seznam.sort()</code></td><td>spremeni seznam, vrne <code>None</code></td></tr>
+                    <tr><td><code>sorted(seznam)</code></td><td>vrne nov urejen seznam</td></tr>
+                    <tr><td><code>niz.upper()</code></td><td>vrne nov niz; prvotni niz ostane</td></tr>
+                    <tr><td><code>np.append(tab, x)</code></td><td>vrne novo NumPy tabelo</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="card search-item" data-keywords="oklepaji podatkovne strukture prazno tuple par">
+              <h3>Oklepaji in prazne strukture</h3>
+              <pre><code>[]              # prazen seznam
+{}              # prazen slovar
+set()           # prazna množica
+()              # prazen nabor (tuple)
+[1, 2]          # seznam
+(1, 2)          # nabor / par
+{"a": 1}        # slovar
+np.array([1, 2])</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="return print zamik funkcija rezultat">
+              <h3><code>return</code> ni <code>print</code></h3>
+              <pre><code>def podvoji(x):
+    return 2 * x
+
+rezultat = podvoji(4)   # rezultat je 8
+print(rezultat)          # samo izpis</code></pre>
+              <p><code>return</code> konča funkcijo. Če ga ni, funkcija vrne <code>None</code>.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="osnove" class="section">
+          <div class="section-heading">
+            <h2>Osnove in funkcije</h2>
+            <p>Definicija funkcije, operatorji, razpakiranje in osnovne funkcije.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="def funkcija argument parameter privzeta vrednost return">
+              <h3>Definicija funkcije</h3>
+              <pre><code>def ime_funkcije(a, b, k=0):
+    rezultat = a + b + k
+    return rezultat
+
+ime_funkcije(2, 3)      # k uporabi 0
+ime_funkcije(2, 3, 4)   # k uporabi 4</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="razpakiranje tuple nabor par več return vrednosti">
+              <h3>Razpakiranje</h3>
+              <pre><code>n1, n2 = kolicnika
+n, m = np.shape(tab)
+
+def deli(a, b):
+    return a // b, a % b
+
+kolicnik, ostanek = deli(7, 3)</code></pre>
+              <p>Število spremenljivk mora ustrezati številu elementov.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="operatorji deljenje modulo potenca primerjava logični">
+              <h3>Operatorji</h3>
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code></td><td>osnovne operacije</td></tr>
+                    <tr><td><code>//</code></td><td>celoštevilsko deljenje</td></tr>
+                    <tr><td><code>%</code></td><td>ostanek pri deljenju</td></tr>
+                    <tr><td><code>**</code></td><td>potenciranje</td></tr>
+                    <tr><td><code>==</code>, <code>!=</code></td><td>enako, različno</td></tr>
+                    <tr><td><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code></td><td>primerjave</td></tr>
+                    <tr><td><code>and</code>, <code>or</code>, <code>not</code></td><td>logični operatorji</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="card search-item" data-keywords="osnovne funkcije len sum min max abs round sorted type int str enumerate zip">
+              <h3>Najpomembnejše vgrajene funkcije</h3>
+              <p>
+                <span class="tag">len</span><span class="tag">sum</span>
+                <span class="tag">min</span><span class="tag">max</span>
+                <span class="tag">abs</span><span class="tag">round</span>
+                <span class="tag">sorted</span><span class="tag">range</span>
+                <span class="tag">enumerate</span><span class="tag">zip</span>
+                <span class="tag">int</span><span class="tag">str</span>
+                <span class="tag">type</span><span class="tag">all</span>
+                <span class="tag">any</span>
+              </p>
+              <pre><code>round(3.14159, 2)      # 3.14
+abs(-7)                # 7
+sorted([3, 1, 2])      # [1, 2, 3]
+int("42")              # 42
+str(42)                # "42"</code></pre>
+            </article>
+
+            <article class="card wide search-item" data-keywords="all any vsi vsaj en pogoj generator">
+              <h3><code>all</code> in <code>any</code></h3>
+              <pre><code>all(x &gt; 0 for x in seznam)   # True samo, če so vsi pozitivni
+any(x &gt; 0 for x in seznam)   # True, če je vsaj eden pozitiven
+
+np.all(tab &gt; 0)              # NumPy različica
+np.any(tab &gt; 0)</code></pre>
+              <div class="callout"><code>all</code>: en sam <code>False</code> pomeni <code>False</code>. <code>any</code>: en sam <code>True</code> pomeni <code>True</code>.</div>
+            </article>
+          </div>
+        </section>
+
+        <section id="zanke" class="section">
+          <div class="section-heading">
+            <h2>Pogoji in zanke</h2>
+            <p>Izbira vrste zanke in značilni načini iteriranja.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="if elif else pogoj">
+              <h3>Pogojni stavek</h3>
+              <pre><code>if pogoj1:
+    ...
+elif pogoj2:
+    ...
+else:
+    ...</code></pre>
+              <p>Za primerjavo uporabi <code>==</code>, ne prirejanja <code>=</code>.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="range začetek konec korak for indeks">
+              <h3><code>range</code></h3>
+              <pre><code>range(konec)
+range(zacetek, konec)
+range(zacetek, konec, korak)
+
+for i in range(0, 10, 2):
+    print(i)  # 0, 2, 4, 6, 8</code></pre>
+              <p>Konec ni vključen. Za interval do vključno <code>n</code> uporabi <code>n + 1</code>.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="for element indeks enumerate">
+              <h3>Element ali indeks?</h3>
+              <pre><code>for element in seznam:
+    print(element)
+
+for i in range(len(seznam)):
+    print(i, seznam[i])
+
+for i, element in enumerate(seznam):
+    print(i, element)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="zip vzporedni seznami pari">
+              <h3>Dva vzporedna seznama: <code>zip</code></h3>
+              <pre><code>for ime, tocke in zip(imena, rezultati):
+    print(ime, tocke)</code></pre>
+              <p><code>zip</code> poveže elemente na enakih indeksih.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="while dokler števec posodabljanje neskončna zanka">
+              <h3><code>while</code></h3>
+              <pre><code>i = 0
+while i &lt; 5:
+    print(i)
+    i += 1</code></pre>
+              <div class="callout danger">V telesu moraš spremeniti nekaj, kar vpliva na pogoj, sicer dobiš neskončno zanko.</div>
+            </article>
+
+            <article class="card search-item" data-keywords="akumulator števec vsota začetna vrednost">
+              <h3>Akumulator in števec</h3>
+              <pre><code>vsota = 0
+stevec = 0
+
+for x in podatki:
+    if x &gt; 0:
+        vsota += x
+        stevec += 1</code></pre>
+              <p>Vsota in števec se običajno začneta z <code>0</code>.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="nizi" class="section">
+          <div class="section-heading">
+            <h2>Nizi</h2>
+            <p>Niz je nespremenljivo zaporedje znakov; metode zato vrnejo nov niz.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="niz indeks znak slicing rezanje obrat">
+              <h3>Indeksiranje in rezanje</h3>
+              <pre><code>niz = "program"
+niz[0]       # "p"
+niz[-1]      # "m"
+niz[1:4]     # "rog"
+niz[::-1]    # "margorp"
+len(niz)     # 7</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="split razdeli niz seznam delimiter ločilo">
+              <h3><code>split</code>: niz → seznam</h3>
+              <pre><code>"a;b;c".split(";")
+# ["a", "b", "c"]
+
+"več   presledkov".split()
+# ["več", "presledkov"]</code></pre>
+              <p>Brez argumenta razdeli po poljubnih presledkih in odstrani prazne dele.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="join združi seznam niz separator ločilo">
+              <h3><code>join</code>: seznam nizov → niz</h3>
+              <pre><code>besede = ["to", "je", "niz"]
+" ".join(besede)       # "to je niz"
+";".join(besede)       # "to;je;niz"
+"".join(besede)        # "tojeniz"</code></pre>
+              <p>Metodo kličeš na ločilu. Vsi elementi morajo biti nizi.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="strip odstrani presledke rob začetek konec">
+              <h3><code>strip</code>: čiščenje robov</h3>
+              <pre><code>"  beseda \n".strip()     # "beseda"
+"---abc---".strip("-")   # "abc"
+
+# ne odstranjuje presledkov iz sredine</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="replace lower upper count index find metode niza">
+              <h3>Pogoste metode nizov</h3>
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><code>niz.lower()</code></td><td>male črke</td></tr>
+                    <tr><td><code>niz.upper()</code></td><td>velike črke</td></tr>
+                    <tr><td><code>niz.replace(a, b)</code></td><td>zamenja pojavitve</td></tr>
+                    <tr><td><code>niz.count(x)</code></td><td>prešteje pojavitve</td></tr>
+                    <tr><td><code>niz.index(x)</code></td><td>indeks prve pojavitve; napaka, če je ni</td></tr>
+                    <tr><td><code>x in niz</code></td><td>preveri vsebovanje</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article id="gradnja" class="card search-item" data-keywords="gradnja novega niza append join">
+              <h3>Gradnja novega niza</h3>
+              <pre><code>znaki = []
+for znak in niz:
+    if pogoj:
+        znaki.append(znak)
+
+rezultat = "".join(znaki)</code></pre>
+              <p>Za daljše rezultate je seznam + <code>join</code> jasen in učinkovit vzorec.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="seznami" class="section">
+          <div class="section-heading">
+            <h2>Seznami, nabori in množice</h2>
+            <p>Seznam je spremenljiv; nabor je nespremenljiv; množica hrani unikatne elemente.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="seznam ustvarjanje indeksiranje spreminjanje">
+              <h3>Seznam</h3>
+              <pre><code>seznam = [4, 7, 9]
+seznam[1]          # 7
+seznam[1] = 100    # spremeni obstoječ seznam
+seznam[:2]         # [4, 100]
+len(seznam)        # 3</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="append extend pop dodaj odstrani seznam">
+              <h3><code>append</code>, <code>extend</code>, <code>pop</code></h3>
+              <pre><code>seznam.append(5)        # doda EN element
+seznam.extend([5, 6])   # doda VEČ elementov
+x = seznam.pop()        # odstrani in vrne zadnjega
+x = seznam.pop(1)       # odstrani in vrne indeks 1</code></pre>
+              <div class="callout"><code>append([5, 6])</code> doda notranji seznam kot en element. <code>extend([5, 6])</code> doda 5 in 6 posebej.</div>
+            </article>
+
+            <article class="card search-item" data-keywords="sort sorted reverse urejanje ključ lambda">
+              <h3>Urejanje</h3>
+              <pre><code>nov = sorted(seznam)              # nov seznam
+nov = sorted(seznam, reverse=True)
+nov = sorted(pari, key=lambda par: par[1])
+
+seznam.sort()                     # spremeni seznam</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="tuple nabor par immutable">
+              <h3>Nabor oziroma <code>tuple</code></h3>
+              <pre><code>tocka = (3, 5)
+x, y = tocka
+
+return (minimum, povprecje, maksimum)</code></pre>
+              <p>Uporaben za pare, trojice in več vrnjenih vrednosti.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="set množica unikatni elementi add unija presek">
+              <h3>Množica <code>set</code></h3>
+              <pre><code>mnozica = set()
+mnozica.add(3)
+mnozica.add(3)       # še vedno samo en 3
+
+a | b                # unija
+a &amp; b                # presek
+x in mnozica         # vsebovanje</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="kopija seznam alias isti objekt copy slicing">
+              <h3>Kopija ali isto ime za isti seznam?</h3>
+              <pre><code>b = a          # a in b kažeta na isti seznam
+b = a.copy()   # plitva kopija
+b = a[:]       # prav tako plitva kopija</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="slovarji" class="section">
+          <div class="section-heading">
+            <h2>Slovarji</h2>
+            <p>Slovar poveže ključ z vrednostjo. Dostopaš s ključem, ne z indeksom.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="slovar ključ vrednost dostop dodaj spremeni">
+              <h3>Ustvarjanje in dostop</h3>
+              <pre><code>slovar = {}
+slovar["masa"] = 5
+slovar["starost"] = 2
+
+slovar["masa"]          # 5
+"masa" in slovar        # True</code></pre>
+              <p><code>slovar[kljuc]</code> sproži napako, če ključ ne obstaja.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="get privzeta vrednost števec akumulacija slovar">
+              <h3><code>get</code> in akumulacija</h3>
+              <pre><code>vrednost = slovar.get(kljuc, 0)
+
+# zelo pogost izpitni vzorec:
+slovar[kljuc] = slovar.get(kljuc, 0) + dodatek
+
+# štetje pojavitev:
+stevci[element] = stevci.get(element, 0) + 1</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="items keys values iteriranje slovar">
+              <h3>Iteriranje po slovarju</h3>
+              <pre><code>for kljuc in slovar:
+    print(kljuc)
+
+for kljuc, vrednost in slovar.items():
+    print(kljuc, vrednost)
+
+slovar.keys()
+slovar.values()</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="update pop združevanje brisanje slovar">
+              <h3>Posodabljanje in brisanje</h3>
+              <pre><code>slovar.update(drugi_slovar)
+vrednost = slovar.pop(kljuc)
+
+nov = slovar.copy()
+nov.update(drugi_slovar)</code></pre>
+              <p>Pri <code>update</code> drugi slovar prepiše vrednosti obstoječih enakih ključev.</p>
+            </article>
+
+            <article class="card wide search-item" data-keywords="niz v slovar split strip parsing razčlenjevanje">
+              <h3>Iz niza v slovar</h3>
+              <pre><code>rezultat = {}
+
+for del_niza in niz.split(";"):
+    kljuc, vrednost = del_niza.split("-")
+    rezultat[kljuc.strip()] = vrednost.strip()
+
+return rezultat</code></pre>
+              <p>Vzorec: razdeli zapis → razpakiraj dele → očisti → vstavi v slovar.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="datoteke" class="section">
+          <div class="section-heading">
+            <h2>Datoteke</h2>
+            <p>Vedno loči: kaj prebereš, kako razčleniš in kaj vrneš oziroma zapišeš.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="open with read branje datoteke encoding">
+              <h3>Branje celotne datoteke</h3>
+              <pre><code>with open(ime_datoteke, "r", encoding="utf-8") as dat:
+    vsebina = dat.read()
+
+return vsebina</code></pre>
+              <p><code>with</code> datoteko po uporabi samodejno zapre.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="vrstice iteriranje strip newline branje datoteke">
+              <h3>Branje po vrsticah</h3>
+              <pre><code>rezultat = []
+
+with open(ime, "r", encoding="utf-8") as dat:
+    for vrstica in dat:
+        vrstica = vrstica.strip()
+        rezultat.append(vrstica)
+
+return rezultat</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="write pisanje datoteka newline način w a">
+              <h3>Pisanje</h3>
+              <pre><code>with open(ime, "w", encoding="utf-8") as dat:
+    dat.write("prva vrstica\n")
+    dat.write("druga vrstica\n")</code></pre>
+              <ul>
+                <li><code>"w"</code>: prepiše vsebino oziroma ustvari datoteko.</li>
+                <li><code>"a"</code>: dodaja na konec.</li>
+                <li><code>write</code> sam ne doda <code>\n</code>.</li>
+              </ul>
+            </article>
+
+            <article class="card search-item" data-keywords="csv split vejica int pretvorba razčlenjevanje datoteka">
+              <h3>Razčlenjevanje vrstic CSV</h3>
+              <pre><code>ime, *ocene = vrstica.strip().split(",")
+ocene = [int(x) for x in ocene]
+
+# ali brez list comprehension:
+ocene = []
+for x in deli:
+    ocene.append(int(x))</code></pre>
+            </article>
+
+            <article class="card wide search-item" data-keywords="datoteka slovar štetje pojavitev vzorec">
+              <h3>Pogost vzorec: datoteka → slovar števcev</h3>
+              <pre><code>stevci = {}
+
+with open(vhodna, "r", encoding="utf-8") as dat:
+    for vrstica in dat:
+        for element in vrstica.strip().split(","):
+            stevci[element] = stevci.get(element, 0) + 1
+
+return stevci</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="numpy" class="section">
+          <div class="section-heading">
+            <h2>NumPy</h2>
+            <p>Operacije izvajaj nad celo tabelo. Zanka pri NumPy nalogi pogosto zmanjša število točk.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="numpy import array ustvarjanje tabela">
+              <h3>Uvoz in ustvarjanje</h3>
+              <pre><code>import numpy as np
+
+a = np.array([1, 2, 3])
+b = np.array([[1, 2], [3, 4]])
+
+np.zeros((n, m))
+np.ones((n, m))</code></pre>
+              <p>Dimenzije podaš kot en nabor <code>(n, m)</code>, zato sta pri <code>zeros</code> dva para oklepajev.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="arange linspace generiranje interval korak število elementov">
+              <h3><code>arange</code> ali <code>linspace</code>?</h3>
+              <pre><code>np.arange(zacetek, konec, korak)
+# konec ni vključen; podan je KORAK
+
+np.linspace(zacetek, konec, st_elementov)
+# oba robova vključena; podano je ŠTEVILO</code></pre>
+              <pre><code>np.arange(30, 60 + razmak, razmak)
+np.linspace(0, 90, n)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="shape size ndim dimenzije vrstice stolpci len">
+              <h3>Oblika in velikost</h3>
+              <pre><code>np.shape(tab)      # nabor dimenzij
+n, m = tab.shape  # razpakiranje vrstic, stolpcev
+np.size(tab)       # skupno število elementov
+tab.ndim           # število dimenzij
+len(tab)           # število elementov prve osi</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="vektorizacija računanje element po element tabela operatorji broadcasting">
+              <h3>Računanje nad celo tabelo</h3>
+              <pre><code>tab + 3
+tab ** 2
+tab1 + tab2
+tab1 &gt; tab2
+np.abs(tab1 - tab2)
+np.sqrt(tab)
+np.sin(tab)</code></pre>
+              <p>NumPy operacijo izvede element po elementu.</p>
+            </article>
+
+            <article id="axis" class="card wide search-item" data-keywords="axis os vsota povprečje vrstice stolpci sum average mean">
+              <h3>Kaj pomeni <code>axis</code>?</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Zapis</th><th>Kaj združi?</th><th>Rezultat</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>np.sum(tab)</code></td><td>vse elemente</td><td>eno število</td></tr>
+                    <tr><td><code>np.sum(tab, axis=0)</code></td><td>navzdol po vrsticah</td><td>ena vrednost za vsak stolpec</td></tr>
+                    <tr><td><code>np.sum(tab, axis=1)</code></td><td>počez po stolpcih</td><td>ena vrednost za vsako vrstico</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre><code># pri tabeli oblike (n, m):
+np.sum(tab, axis=0).shape      # (m,)
+np.sum(tab, axis=1).shape      # (n,)
+
+np.average(tab, axis=0)
+np.min(tab, axis=1)
+np.max(tab, axis=1)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="where pogoj izbira filter pozitivni negativni">
+              <h3><code>np.where</code></h3>
+              <pre><code>np.where(pogoj, ce_velja, ce_ne_velja)
+
+pozitivni = np.where(tab &gt; 0, tab, 0)
+izbrano = np.where(a &gt; 0, a, b)</code></pre>
+              <p>Pogoj se preveri za vsak element posebej.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="all any true false numpy pogoj">
+              <h3><code>np.all</code> in <code>np.any</code></h3>
+              <pre><code>np.all(odstopanja &lt;= 1)
+np.any(tab == 0)
+
+# np.all vrne eno vrednost True/False
+# np.any vrne eno vrednost True/False</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="minimum maximum max min mean average std prod cumsum argmax argmin statistika">
+              <h3>Agregacije in statistika</h3>
+              <p>
+                <span class="tag green">np.sum</span>
+                <span class="tag green">np.min</span>
+                <span class="tag green">np.max</span>
+                <span class="tag green">np.mean</span>
+                <span class="tag green">np.average</span>
+                <span class="tag green">np.std</span>
+                <span class="tag green">np.prod</span>
+                <span class="tag green">np.cumsum</span>
+                <span class="tag green">np.argmax</span>
+                <span class="tag green">np.argmin</span>
+              </p>
+              <pre><code>i = np.argmax(vrednosti)   # indeks največjega
+minimum = round(np.min(tab), 2)
+povprecje = round(np.average(tab), 2)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="maximum elementwise max razlika">
+              <h3><code>np.max</code> ≠ <code>np.maximum</code></h3>
+              <pre><code>np.max(a)            # največji element tabele a
+np.maximum(a, b)     # večji od a[i] in b[i] za vsak i</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="flatnonzero nonzero indeksi pogoj iskanje">
+              <h3>Indeksi, kjer velja pogoj</h3>
+              <pre><code>np.flatnonzero(a &gt; b)    # 1D tabela indeksov
+np.nonzero(tab &gt; 0)     # nabor tabel indeksov po oseh</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="append vstack concatenate hstack združevanje tabel">
+              <h3>Združevanje tabel</h3>
+              <pre><code>np.append(a, b)          # ena daljša 1D tabela
+np.vstack([a, b, c])    # a, b, c postanejo vrstice
+np.hstack([a, b])       # vodoravno
+np.concatenate([a, b])  # združevanje po osi 0 privzeto</code></pre>
+              <p><code>np.append</code> vrne novo tabelo; prvotne ne spremeni.</p>
+            </article>
+
+            <article class="card search-item" data-keywords="reshape newaxis atleast_2d transpose T oblika">
+              <h3>Spreminjanje oblike</h3>
+              <pre><code>tab.reshape((n, m))
+np.reshape(tab, (n, m))
+tab.T
+tab[np.newaxis, :]       # 1D -&gt; ena vrstica
+tab[:, np.newaxis]       # 1D -&gt; en stolpec
+np.atleast_2d(tab)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="flip roll pad sort preurejanje tabela">
+              <h3>Preurejanje</h3>
+              <pre><code>np.flip(tab)              # obrne vse osi
+np.flip(tab, axis=0)      # obrne vrstice
+np.roll(tab, 1)           # ciklično premakne
+np.pad(tab, 1)            # obda z ničlami
+np.sort(tab)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="sin cos exp log sqrt square pi radians degrees arcsin matematika numpy">
+              <h3>Matematične funkcije</h3>
+              <p>
+                <span class="tag green">np.sin</span><span class="tag green">np.cos</span>
+                <span class="tag green">np.arcsin</span><span class="tag green">np.exp</span>
+                <span class="tag green">np.log</span><span class="tag green">np.sqrt</span>
+                <span class="tag green">np.square</span><span class="tag green">np.pi</span>
+              </p>
+              <pre><code>radiani = np.radians(stopinje)
+y = np.sin(radiani)
+kot_rd = np.arcsin(y)
+kot_stopinje = np.degrees(kot_rd)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="fromfunction meshgrid indeksi generiranje večdimenzionalne tabele">
+              <h3>Tabele iz indeksov</h3>
+              <pre><code>np.fromfunction(lambda i, j: i * j, (n, m))
+
+i, j = np.meshgrid(
+    np.arange(n), np.arange(m), indexing="ij"
+)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="complex real imag nan astype dtype tip podatkov">
+              <h3>Tipi in posebne vrednosti</h3>
+              <pre><code>tab.astype(float)
+tab.real
+tab.imag
+np.real(tab)
+np.imag(tab)
+np.nan
+1j                 # imaginarna enota</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="vzorci" class="section">
+          <div class="section-heading">
+            <h2>Izpitni vzorci</h2>
+            <p>Prevod pogoste ideje v standardni zapis, podoben uradnim rešitvam.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card search-item" data-keywords="nov seznam filter pogoj append vzorec">
+              <h3>Zgradi nov seznam</h3>
+              <pre><code>rezultat = []
+for element in podatki:
+    if pogoj:
+        rezultat.append(element)
+return rezultat</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="slovar štetje akumulacija get vzorec">
+              <h3>Seštevanje po ključih</h3>
+              <pre><code>rezultat = {}
+for kljuc, dodatek in podatki:
+    rezultat[kljuc] = rezultat.get(kljuc, 0) + dodatek
+return rezultat</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="najboljši maksimum ročna zanka začetna vrednost None">
+              <h3>Ročno iskanje najboljšega</h3>
+              <pre><code>najboljsi = None
+for element in podatki:
+    if najboljsi is None or element &gt; najboljsi:
+        najboljsi = element
+return najboljsi</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="numpy nova tabela razširi vrstice stolpci zeros rezanje">
+              <h3>Razširi NumPy tabelo</h3>
+              <pre><code>n, m = tab.shape
+nov_m = max(m, len(nova_vrstica))
+nova = np.zeros((n + 1, nov_m))
+
+nova[:n, :m] = tab
+nova[n, :len(nova_vrstica)] = nova_vrstica
+return nova</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="numpy pozitivni negativni vsote po vrsticah where axis">
+              <h3>Loči pozitivne in negativne vrednosti</h3>
+              <pre><code>pozitivni = np.where(tab &gt; 0, tab, 0)
+negativni = np.where(tab &lt; 0, tab, 0)
+
+vsote_poz = np.sum(pozitivni, axis=1)
+vsote_neg = np.sum(negativni, axis=1)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="numpy odstopanje toleranca abs all meritev">
+              <h3>Preveri vsa odstopanja</h3>
+              <pre><code>odstopanja = np.abs(meritve - pricakovano)
+return np.all(odstopanja &lt;= meja)</code></pre>
+            </article>
+
+            <article class="card search-item" data-keywords="numpy več vrstic vstack statistika append">
+              <h3>Združi meritve in izračunaj statistiko</h3>
+              <pre><code>razlike1 = np.abs(pricakovano1 - meritve1)
+razlike2 = np.abs(pricakovano2 - meritve2)
+razlike = np.append(razlike1, razlike2)
+
+return (
+    round(np.min(razlike), 2),
+    round(np.average(razlike), 2),
+    round(np.max(razlike), 2),
+)</code></pre>
+            </article>
+
+            <article id="izbira-funkcije" class="card search-item" data-keywords="katero funkcijo izberi funkcija ideja">
+              <h3>Ideja → funkcija</h3>
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td>razdeli niz</td><td><code>split</code></td></tr>
+                    <tr><td>združi nize</td><td><code>join</code></td></tr>
+                    <tr><td>dodaj en element seznamu</td><td><code>append</code></td></tr>
+                    <tr><td>štej po ključih</td><td><code>get(..., 0)</code></td></tr>
+                    <tr><td>indeks + element</td><td><code>enumerate</code></td></tr>
+                    <tr><td>vzporedna seznama</td><td><code>zip</code></td></tr>
+                    <tr><td>enakomeren NumPy korak</td><td><code>np.arange</code></td></tr>
+                    <tr><td>določeno število točk</td><td><code>np.linspace</code></td></tr>
+                    <tr><td>izberi glede na pogoj</td><td><code>np.where</code></td></tr>
+                    <tr><td>preveri vse pogoje</td><td><code>np.all</code></td></tr>
+                    <tr><td>zloži 1D tabele kot vrstice</td><td><code>np.vstack</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="razredi" class="section">
+          <div class="section-heading">
+            <h2>Razredi — kratek pregled</h2>
+            <p>Na izpitu redko, zato samo osnovni zapis.</p>
+          </div>
+
+          <div class="grid">
+            <article class="card wide search-item" data-keywords="class razred init self str repr lt metoda atribut">
+              <h3>Osnovni vzorec razreda</h3>
+              <pre><code>class Predmet:
+    def __init__(self, masa, starost):
+        self.masa = masa
+        self.starost = starost
+
+    def __str__(self):
+        return f"Predmet z maso {self.masa}."
+
+    def __repr__(self):
+        return f"Predmet({self.masa}, {self.starost})"
+
+    def __lt__(self, drugi):
+        return (self.masa, self.starost) &lt; (drugi.masa, drugi.starost)</code></pre>
+              <ul>
+                <li><code>self</code> je trenutni objekt.</li>
+                <li><code>__init__</code> nastavi atribute.</li>
+                <li><code>__str__</code> uporablja <code>print(objekt)</code>.</li>
+                <li><code>__repr__</code> je predstavitev objekta v konzoli.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="funkcije" class="section">
+          <div class="section-heading">
+            <h2>Indeks funkcij iz zvezka</h2>
+            <p>Za hitro iskanje po imenu; podrobnosti poišči z iskalnikom zgoraj.</p>
+          </div>
+
+          <div class="grid three">
+            <article class="card search-item" data-keywords="python builtins funkcije">
+              <h3>Python</h3>
+              <p>
+                <span class="tag">abs</span><span class="tag">all</span>
+                <span class="tag">any</span><span class="tag">enumerate</span>
+                <span class="tag">int</span><span class="tag">len</span>
+                <span class="tag">list</span><span class="tag">max</span>
+                <span class="tag">min</span><span class="tag">open</span>
+                <span class="tag">print</span><span class="tag">range</span>
+                <span class="tag">round</span><span class="tag">set</span>
+                <span class="tag">sorted</span><span class="tag">str</span>
+                <span class="tag">sum</span><span class="tag">tuple</span>
+                <span class="tag">type</span><span class="tag">zip</span>
+              </p>
+            </article>
+
+            <article class="card search-item" data-keywords="metode nizi seznami slovarji datoteke">
+              <h3>Metode objektov</h3>
+              <p>
+                <span class="tag">append</span><span class="tag">extend</span>
+                <span class="tag">pop</span><span class="tag">sort</span>
+                <span class="tag">split</span><span class="tag">strip</span>
+                <span class="tag">join</span><span class="tag">replace</span>
+                <span class="tag">lower</span><span class="tag">upper</span>
+                <span class="tag">count</span><span class="tag">index</span>
+                <span class="tag">get</span><span class="tag">items</span>
+                <span class="tag">keys</span><span class="tag">values</span>
+                <span class="tag">update</span><span class="tag">read</span>
+                <span class="tag">write</span>
+              </p>
+            </article>
+
+            <article class="card search-item" data-keywords="numpy vse funkcije">
+              <h3>NumPy</h3>
+              <p>
+                <span class="tag green">abs</span><span class="tag green">all</span>
+                <span class="tag green">any</span><span class="tag green">append</span>
+                <span class="tag green">arange</span><span class="tag green">arcsin</span>
+                <span class="tag green">argmax</span><span class="tag green">argmin</span>
+                <span class="tag green">array</span><span class="tag green">atleast_2d</span>
+                <span class="tag green">average</span><span class="tag green">concatenate</span>
+                <span class="tag green">cos</span><span class="tag green">cumsum</span>
+                <span class="tag green">degrees</span><span class="tag green">exp</span>
+                <span class="tag green">flatnonzero</span><span class="tag green">flip</span>
+                <span class="tag green">fromfunction</span><span class="tag green">linspace</span>
+                <span class="tag green">log</span><span class="tag green">max</span>
+                <span class="tag green">maximum</span><span class="tag green">mean</span>
+                <span class="tag green">meshgrid</span><span class="tag green">min</span>
+                <span class="tag green">newaxis</span><span class="tag green">nonzero</span>
+                <span class="tag green">ones</span><span class="tag green">pad</span>
+                <span class="tag green">pi</span><span class="tag green">prod</span>
+                <span class="tag green">radians</span><span class="tag green">reshape</span>
+                <span class="tag green">roll</span><span class="tag green">shape</span>
+                <span class="tag green">sin</span><span class="tag green">size</span>
+                <span class="tag green">sort</span><span class="tag green">sqrt</span>
+                <span class="tag green">square</span><span class="tag green">std</span>
+                <span class="tag green">sum</span><span class="tag green">vstack</span>
+                <span class="tag green">where</span><span class="tag green">zeros</span>
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>
+            Pripravljeno iz zvezka <code>snov.ipynb</code>. Za vse prvotne razlage in
+            naloge odpri
+            <a href="https://nbviewer.org/github/Neja2502/python_school/blob/main/snov.ipynb">celoten zvezek v spletni obliki</a>.
+          </p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
