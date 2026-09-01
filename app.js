@@ -57,6 +57,17 @@ if niz:
       </article>`
     );
   }
+
+  const nav = document.querySelector(".nav");
+  if (nav && !nav.querySelector('a[href="zvezki.html"]')) {
+    const link = document.createElement("a");
+    link.href = "zvezki.html";
+    link.textContent = "Zvezki";
+    link.className = "emphasis";
+    const functionsLink = nav.querySelector('a[href="#funkcije"]');
+    if (functionsLink) functionsLink.insertAdjacentElement("afterend", link);
+    else nav.appendChild(link);
+  }
 };
 
 baseScript.onerror = () => {
