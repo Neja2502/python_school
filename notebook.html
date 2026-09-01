@@ -54,13 +54,25 @@
       <nav id="toc" aria-label="Kazalo zvezka"></nav>
 
       <div class="toc-footer">
-        Kazalo se ustvari iz Markdown naslovov. Klik na naslov skoči neposredno na poglavje.
+        Klik na naslov skoči neposredno na poglavje. Kazalo zazna tudi glavne naslove, ki niso zapisani z znakom <code>#</code>.
       </div>
     </aside>
 
     <main class="notebook-shell">
       <div id="loading" class="status-card">Nalagam zvezek ...</div>
       <div id="error" class="status-card error" hidden></div>
+
+      <section id="quick-jumps" class="quick-jumps" hidden>
+        <div class="quick-jumps-heading">
+          <div>
+            <div class="quick-jumps-eyebrow">KAZALO ZVEZKA</div>
+            <h2 id="quick-jumps-title">Hitri skoki</h2>
+          </div>
+          <p id="quick-jumps-description"></p>
+        </div>
+        <nav id="quick-jumps-list" class="quick-jumps-list" aria-label="Hitri skoki po zvezku"></nav>
+      </section>
+
       <article id="notebook" class="notebook" hidden></article>
     </main>
   </div>
