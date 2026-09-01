@@ -369,7 +369,7 @@ th {
 }
 
 .function-legend {
-  display: none;
+  display: none !important;
 }
 
 .function-reference {
