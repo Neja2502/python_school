@@ -4,6 +4,7 @@ import unicodedata
 from pathlib import Path
 
 TOC_TAG = "python-prirocnik-toc-v1"
+NOTEBOOK_PREVIEW_URL = "https://neja2502.github.io/python_school/notebook.html?file="
 
 
 def source_text(cell):
@@ -29,9 +30,13 @@ def github_slug(text):
     return text.strip("-")
 
 
-def toc_cell(title, intro, entries):
+def toc_cell(title, intro, entries, notebook_name):
     lines = [f"# {title}\n", "\n", f"{intro}\n", "\n"]
-    lines.extend(f"- [{text}](#{github_slug(text)})\n" for text in entries)
+    preview_url = f"{NOTEBOOK_PREVIEW_URL}{notebook_name}"
+    lines.extend(
+        f"- [{text}]({preview_url}#{github_slug(text)})\n"
+        for text in entries
+    )
     lines.extend(["\n", "---\n", "\n", "*Klik na naslov skoči neposredno na izbrano poglavje.*"])
     return {
         "cell_type": "markdown",
@@ -61,7 +66,9 @@ def update_snov(path):
             headings.append(item[1])
     if not headings:
         raise RuntimeError("V snov.ipynb ni glavnih Markdown naslovov.")
-    nb["cells"] = [toc_cell("Kazalo", "**Hitri skoki po snovi:**", headings)] + cells
+    nb["cells"] = [
+        toc_cell("Kazalo", "**Hitri skoki po snovi:**", headings, "snov.ipynb")
+    ] + cells
     path.write_text(json.dumps(nb, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print("snov.ipynb:", headings)
 
@@ -81,7 +88,14 @@ def update_izpiti(path):
         headings = [item[1] for cell in cells if (item := heading_from_cell(cell)) and item[0] == 1]
     if not headings:
         raise RuntimeError("V izpitiRP.ipynb ni naslovov izpitov.")
-    nb["cells"] = [toc_cell("Kazalo izpitov", "**Klikni na izpit za neposreden skok:**", headings)] + cells
+    nb["cells"] = [
+        toc_cell(
+            "Kazalo izpitov",
+            "**Klikni na izpit za neposreden skok:**",
+            headings,
+            "izpitiRP.ipynb",
+        )
+    ] + cells
     path.write_text(json.dumps(nb, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print("izpitiRP.ipynb:", headings)
 
