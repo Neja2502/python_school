@@ -7,6 +7,23 @@ currentScript.onload = () => {
     if (document.querySelector("#viri")) {
       const auditScript = document.createElement("script");
       auditScript.src = "app-audit.js";
+
+      auditScript.onload = () => {
+        // Viri naj bodo zadnje poglavje priročnika, za Slovarjem funkcij.
+        const sourcesSection = document.querySelector("#viri");
+        const functionsSection = document.querySelector("#funkcije");
+        if (sourcesSection && functionsSection) {
+          functionsSection.insertAdjacentElement("afterend", sourcesSection);
+        }
+
+        // Enak vrstni red tudi v levem kazalu: Viri čisto na konec.
+        const nav = document.querySelector(".nav");
+        const sourcesLink = nav?.querySelector('a[href="#viri"]');
+        if (nav && sourcesLink) {
+          nav.appendChild(sourcesLink);
+        }
+      };
+
       document.head.appendChild(auditScript);
       return;
     }
